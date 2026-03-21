@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Rock : MonoBehaviour
 {
@@ -16,8 +15,9 @@ public class Rock : MonoBehaviour
     private void SpawnResource(CharacterBase owner)
     {
         Carry carry = owner.GetComponent<Carry>();
+        if (carry == null) return;
 
         RockCarriable rockCarriableGO = Instantiate(rockCarriable);
-        carry.TryStart(rockCarriableGO);
+        carry.TryAdd(rockCarriableGO);
     }
 }

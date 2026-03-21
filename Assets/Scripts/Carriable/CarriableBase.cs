@@ -4,7 +4,8 @@ using UnityEngine;
 public enum CarrySlotType
 {
     Front,
-    Back
+    Back,
+    Tile
 }
 
 public enum CarryItemType
@@ -17,6 +18,9 @@ public enum CarryItemType
 
 public abstract class CarriableBase : MonoBehaviour
 {
+    [Header("Item Info")]
+    [SerializeField] private CarryItemType itemType = CarryItemType.None;
+
     [Header("Carry Visual")]
     [SerializeField] private float stackHeight = 0.35f;
     [SerializeField] private float moveDuration = 0.25f;
@@ -25,18 +29,18 @@ public abstract class CarriableBase : MonoBehaviour
     private Tween moveTween;
     private Tween rotateTween;
 
-    public Carry Owner { get; private set; }
+    public StackHolderBase Owner { get; private set; }
     public bool IsCarried => Owner != null;
     public float StackHeight => stackHeight;
+    public CarryItemType ItemType => itemType;
 
     public abstract CarrySlotType SlotType { get; }
 
-    public virtual void OnPickedUp(Carry owner, Transform parent, Vector3 localPosition)
+    public virtual void OnPickedUp(StackHolderBase owner, Transform parent, Vector3 localPosition, Vector3 localEulerAngles)
     {
         Owner = owner;
 
         transform.DOKill();
-
         transform.SetParent(parent, true);
 
         moveTween = transform
@@ -44,11 +48,11 @@ public abstract class CarriableBase : MonoBehaviour
             .SetEase(moveEase);
 
         rotateTween = transform
-            .DOLocalRotate(Vector3.zero, moveDuration)
+            .DOLocalRotate(localEulerAngles, moveDuration)
             .SetEase(moveEase);
     }
 
-    public virtual void UpdateCarryPosition(Transform parent, Vector3 localPosition)
+    public virtual void UpdateCarryPosition(Transform parent, Vector3 localPosition, Vector3 localEulerAngles)
     {
         transform.DOKill();
 
@@ -60,8 +64,14 @@ public abstract class CarriableBase : MonoBehaviour
             .SetEase(moveEase);
 
         rotateTween = transform
-            .DOLocalRotate(Vector3.zero, moveDuration)
+            .DOLocalRotate(localEulerAngles, moveDuration)
             .SetEase(moveEase);
+    }
+
+    public virtual void OnReleased()
+    {
+        Owner = null;
+        transform.DOKill();
     }
 
     public virtual void OnDropped(Vector3 worldPosition)

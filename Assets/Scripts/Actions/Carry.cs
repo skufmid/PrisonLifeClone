@@ -1,178 +1,98 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Carry : ActionBase<CarriableBase>
+public class Carry : StackHolderBase
 {
-    [Header("Carry Points")]
-    [SerializeField] private Transform frontPosition;
-    [SerializeField] private Transform backPosition;
-
-    [Header("Capacity")]
-    [SerializeField] private int frontCapacity = 5;
-    [SerializeField] private int backCapacity = 10;
-
-    [Header("Drop Settings")]
-    [SerializeField] private float dropSpacing = 0.25f;
-    [SerializeField] private float sideOffset = 0.35f;
-
-    private readonly List<CarriableBase> frontStack = new();
-    private readonly List<CarriableBase> backStack = new();
-
-    protected override bool CanStart(CarriableBase target)
+    [Header("Front Slot")]
+    [SerializeField]
+    private StackSlotData frontSlot = new StackSlotData
     {
-        if (target == null) return false;
-        if (target.IsCarried) return false;
+        slotType = CarrySlotType.Front
+    };
 
-        List<CarriableBase> stack = GetStack(target.SlotType);
-        int capacity = GetCapacity(target.SlotType);
+    [Header("Back Slot")]
+    [SerializeField]
+    private StackSlotData backSlot = new StackSlotData
+    {
+        slotType = CarrySlotType.Back
+    };
 
-        return stack.Count < capacity;
+    public bool TryAdd(CarriableBase item)
+    {
+        if (item == null) return false;
+
+        StackSlotData slot = GetSlot(item.SlotType);
+        if (slot == null) return false;
+
+        return TryAddToSlot(item, slot);
     }
 
-    protected override void OnStarted()
+    public bool TryTakeLast(CarrySlotType slotType, out CarriableBase item)
     {
-        if (target == null)
-        {
-            StopAction();
-            return;
-        }
-
-        AddToStack(target);
+        return TryTakeLastFromSlot(GetSlot(slotType), out item);
     }
 
-    protected override IEnumerator CoAction()
+    public bool TryTakeLastOfType(CarrySlotType slotType, CarryItemType itemType, out CarriableBase item)
     {
-        yield return null;
-        StopAction();
+        return TryTakeLastOfTypeFromSlot(GetSlot(slotType), itemType, out item);
     }
 
-    private void AddToStack(CarriableBase item)
+    public bool TryTakeLastOfTypeFromAny(CarryItemType itemType, out CarriableBase item)
     {
-        List<CarriableBase> stack = GetStack(item.SlotType);
-        Transform anchor = GetAnchor(item.SlotType);
+        item = null;
 
-        stack.Add(item);
+        if (TryTakeLastOfType(CarrySlotType.Front, itemType, out item))
+            return true;
 
-        Vector3 localPos = GetStackLocalPosition(stack, stack.Count - 1);
-        item.OnPickedUp(this, anchor, localPos);
+        if (TryTakeLastOfType(CarrySlotType.Back, itemType, out item))
+            return true;
 
-        UpdateStackPositions(item.SlotType);
+        return false;
     }
 
-    public bool DropLast(CarrySlotType slotType)
+    public bool TryTakeLastFromAny(out CarriableBase item)
     {
-        List<CarriableBase> stack = GetStack(slotType);
-        if (stack.Count == 0) return false;
+        item = null;
 
-        int lastIndex = stack.Count - 1;
-        CarriableBase item = stack[lastIndex];
-        stack.RemoveAt(lastIndex);
+        if (TryTakeLast(CarrySlotType.Front, out item))
+            return true;
 
-        Vector3 dropPosition = GetDropPosition(slotType, lastIndex);
-        item.OnDropped(dropPosition);
+        if (TryTakeLast(CarrySlotType.Back, out item))
+            return true;
 
-        UpdateStackPositions(slotType);
-        return true;
-    }
-
-    public bool DropLastTo(CarrySlotType slotType, Transform targetPoint)
-    {
-        List<CarriableBase> stack = GetStack(slotType);
-        if (stack.Count == 0) return false;
-        if (targetPoint == null) return false;
-
-        int lastIndex = stack.Count - 1;
-        CarriableBase item = stack[lastIndex];
-        stack.RemoveAt(lastIndex);
-
-        item.OnDropped(targetPoint.position);
-
-        UpdateStackPositions(slotType);
-        return true;
-    }
-
-    public int DropMoneyToTile(PurchaseTile tile, int maxAmount)
-    {
-        if (tile == null || maxAmount <= 0)
-            return 0;
-
-        int deposited = 0;
-
-        List<CarriableBase> stack = backStack;
-
-        for (int i = stack.Count - 1; i >= 0; i--)
-        {
-            if (deposited >= maxAmount)
-                break;
-
-            if (stack[i] is not Money money)
-                continue;
-
-            money.OnDropped(tile.transform.position);
-            stack.RemoveAt(i);
-            deposited++;
-        }
-
-        UpdateStackPositions(CarrySlotType.Back);
-        return deposited;
+        return false;
     }
 
     public int GetCount(CarrySlotType slotType)
     {
-        return GetStack(slotType).Count;
+        return GetCount(GetSlot(slotType));
     }
 
-    private void UpdateStackPositions(CarrySlotType slotType)
+    public bool HasItem(CarryItemType itemType)
     {
-        List<CarriableBase> stack = GetStack(slotType);
-        Transform anchor = GetAnchor(slotType);
-
-        for (int i = 0; i < stack.Count; i++)
+        for (int i = frontSlot.items.Count - 1; i >= 0; i--)
         {
-            Vector3 localPos = GetStackLocalPosition(stack, i);
-            stack[i].UpdateCarryPosition(anchor, localPos);
-        }
-    }
-
-    private Vector3 GetStackLocalPosition(List<CarriableBase> stack, int index)
-    {
-        float y = 0f;
-
-        for (int i = 0; i < index; i++)
-        {
-            y += stack[i].StackHeight;
+            if (frontSlot.items[i] != null && frontSlot.items[i].ItemType == itemType)
+                return true;
         }
 
-        return new Vector3(0f, y, 0f);
+        for (int i = backSlot.items.Count - 1; i >= 0; i--)
+        {
+            if (backSlot.items[i] != null && backSlot.items[i].ItemType == itemType)
+                return true;
+        }
+
+        return false;
     }
 
-    private Vector3 GetDropPosition(CarrySlotType slotType, int order)
+    public void DropLastToWorld(CarrySlotType slotType, Vector3 worldPosition)
     {
-        Transform anchor = GetAnchor(slotType);
-
-        Vector3 horizontalOffset =
-            slotType == CarrySlotType.Front
-            ? transform.right * sideOffset
-            : -transform.right * sideOffset;
-
-        Vector3 depthOffset = transform.forward * (order * dropSpacing);
-
-        return anchor.position + horizontalOffset + depthOffset;
+        if (TryTakeLast(slotType, out CarriableBase item))
+            item.OnDropped(worldPosition);
     }
 
-    private List<CarriableBase> GetStack(CarrySlotType slotType)
+    private StackSlotData GetSlot(CarrySlotType slotType)
     {
-        return slotType == CarrySlotType.Front ? frontStack : backStack;
-    }
-
-    private Transform GetAnchor(CarrySlotType slotType)
-    {
-        return slotType == CarrySlotType.Front ? frontPosition : backPosition;
-    }
-
-    private int GetCapacity(CarrySlotType slotType)
-    {
-        return slotType == CarrySlotType.Front ? frontCapacity : backCapacity;
+        return slotType == CarrySlotType.Front ? frontSlot : backSlot;
     }
 }

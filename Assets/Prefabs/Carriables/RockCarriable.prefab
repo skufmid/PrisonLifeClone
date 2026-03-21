@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13639d985a00cb74eb843bcb37f35c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemType: 1
   stackHeight: 0.35
   moveDuration: 0.25
   moveEase: 9

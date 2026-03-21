@@ -1,35 +1,90 @@
 using UnityEngine;
+using UnityEngine.Events;
 
+[RequireComponent(typeof(TileStack))]
 public class PurchaseTile : ActionTileBase
 {
+    [Header("Price")]
     [SerializeField] private int price = 10;
-    [SerializeField] private string purchaseId;
 
-    private int currentPaid;
+    [Header("Deposit")]
+    [SerializeField] private bool destroyMoneyVisualOnDeposit = true;
 
-    protected override void OnCharacterEnter(CharacterBase character)
+    [Header("State")]
+    [SerializeField] private bool disableAfterPurchase = true;
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onProgressChanged;
+    [SerializeField] private UnityEvent onPurchased;
+
+    private TileStack tileStack;
+    private int depositedAmount;
+    private bool isPurchased;
+
+    public int Price => price;
+    public int CurrentAmount => depositedAmount;
+    public int RemainingAmount => Mathf.Max(0, price - depositedAmount);
+    public bool IsPurchased => isPurchased;
+
+    protected override void Awake()
     {
+        base.Awake();
+        tileStack = GetComponent<TileStack>();
+    }
+
+    protected override void ProcessCharacter(CharacterBase character)
+    {
+        if (character == null) return;
+        if (tileStack == null) return;
+        if (isPurchased) return;
+        if (depositedAmount >= price)
+        {
+            CompletePurchase();
+            return;
+        }
+
         Carry carry = character.GetComponent<Carry>();
         if (carry == null) return;
 
-        int paid = carry.DropMoneyToTile(this, price - currentPaid);
-        currentPaid += paid;
+        if (!carry.TryTakeLastOfTypeFromAny(CarryItemType.Money, out CarriableBase moneyItem))
+            return;
 
-        Debug.Log($"구매 진행: {currentPaid}/{price}");
+        bool depositSuccess = false;
 
-        if (currentPaid >= price)
+        if (destroyMoneyVisualOnDeposit)
         {
-            CompletePurchase(character);
+            moneyItem.OnReleased();
+            Destroy(moneyItem.gameObject);
+            depositSuccess = true;
+        }
+        else
+        {
+            depositSuccess = tileStack.TryAdd(moneyItem);
+        }
+
+        if (!depositSuccess)
+        {
+            carry.TryAdd(moneyItem);
+            return;
+        }
+
+        depositedAmount++;
+        onProgressChanged?.Invoke();
+
+        if (depositedAmount >= price)
+        {
+            CompletePurchase();
         }
     }
 
-    private void CompletePurchase(CharacterBase character)
+    private void CompletePurchase()
     {
-        Debug.Log($"구매 완료: {purchaseId}");
+        if (isPurchased) return;
 
-        // TODO:
-        // - 드릴 지급
-        // - 광부 생성
-        // - 업그레이드 적용
+        isPurchased = true;
+        onPurchased?.Invoke();
+
+        if (disableAfterPurchase)
+            gameObject.SetActive(false);
     }
 }

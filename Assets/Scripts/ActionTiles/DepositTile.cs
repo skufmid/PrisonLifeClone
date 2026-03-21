@@ -1,16 +1,36 @@
 using UnityEngine;
 
+[RequireComponent(typeof(TileStack))]
 public class DepositTile : ActionTileBase
 {
-    [SerializeField] private CarrySlotType slotType;
-    [SerializeField] private Transform dropPoint;
+    private TileStack tileStack;
 
-    protected override void OnCharacterEnter(CharacterBase character)
+    protected override void Awake()
     {
-        Debug.Log("OnCharacterEnter");
+        base.Awake();
+        tileStack = GetComponent<TileStack>();
+    }
+
+    protected override void ProcessCharacter(CharacterBase character)
+    {
+        Debug.Log("ProcessCharacter");
+        if (character == null) return;
+        if (tileStack == null) return;
+        if (tileStack.IsFull) return;
+        Debug.Log("ProcessCharacter ok");
+
         Carry carry = character.GetComponent<Carry>();
         if (carry == null) return;
 
-        carry.DropLastTo(slotType, dropPoint);
+        CarryItemType allowedType = tileStack.AllowedItemType;
+        if (allowedType == CarryItemType.None) return;
+
+        if (!carry.TryTakeLastOfTypeFromAny(allowedType, out CarriableBase item))
+            return;
+
+        if (!tileStack.TryAdd(item))
+        {
+            carry.TryAdd(item);
+        }
     }
 }
