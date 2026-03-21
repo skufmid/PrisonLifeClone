@@ -7,6 +7,14 @@ public enum CarrySlotType
     Back
 }
 
+public enum CarryItemType
+{
+    None,
+    Rock,
+    Handcuff,
+    Money
+}
+
 public abstract class CarriableBase : MonoBehaviour
 {
     [Header("Carry Visual")]

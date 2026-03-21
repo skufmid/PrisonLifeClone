@@ -21,18 +21,19 @@ public abstract class ActionBase<TTarget> : MonoBehaviour where TTarget : Compon
         TryStart(target);
     }
 
-    public virtual void TryStart(TTarget newTarget)
+    public virtual bool TryStart(TTarget newTarget)
     {
-        if (IsActing) return;
-        if (newTarget == null) return;
-        if (!CanStart(newTarget)) return;
+        if (IsActing) return false;
+        if (newTarget == null) return false;
+        if (!CanStart(newTarget)) return false;
 
         target = newTarget;
 
         OnStarted();
         actionCoroutine = StartCoroutine(CoAction());
-
+        return true;
     }
+
     protected virtual bool CanStart(TTarget target)
     {
         return true;

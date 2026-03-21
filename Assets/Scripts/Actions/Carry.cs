@@ -21,11 +21,8 @@ public class Carry : ActionBase<CarriableBase>
 
     protected override bool CanStart(CarriableBase target)
     {
-        if (target == null)
-            return false;
-
-        if (target.IsCarried)
-            return false;
+        if (target == null) return false;
+        if (target.IsCarried) return false;
 
         List<CarriableBase> stack = GetStack(target.SlotType);
         int capacity = GetCapacity(target.SlotType);
@@ -50,10 +47,6 @@ public class Carry : ActionBase<CarriableBase>
         StopAction();
     }
 
-    protected override void OnStopped()
-    {
-    }
-
     private void AddToStack(CarriableBase item)
     {
         List<CarriableBase> stack = GetStack(item.SlotType);
@@ -70,8 +63,7 @@ public class Carry : ActionBase<CarriableBase>
     public bool DropLast(CarrySlotType slotType)
     {
         List<CarriableBase> stack = GetStack(slotType);
-        if (stack.Count == 0)
-            return false;
+        if (stack.Count == 0) return false;
 
         int lastIndex = stack.Count - 1;
         CarriableBase item = stack[lastIndex];
@@ -84,27 +76,51 @@ public class Carry : ActionBase<CarriableBase>
         return true;
     }
 
-    public void DropAll(CarrySlotType slotType)
+    public bool DropLastTo(CarrySlotType slotType, Transform targetPoint)
     {
         List<CarriableBase> stack = GetStack(slotType);
+        if (stack.Count == 0) return false;
+        if (targetPoint == null) return false;
+
+        int lastIndex = stack.Count - 1;
+        CarriableBase item = stack[lastIndex];
+        stack.RemoveAt(lastIndex);
+
+        item.OnDropped(targetPoint.position);
+
+        UpdateStackPositions(slotType);
+        return true;
+    }
+
+    public int DropMoneyToTile(PurchaseTile tile, int maxAmount)
+    {
+        if (tile == null || maxAmount <= 0)
+            return 0;
+
+        int deposited = 0;
+
+        List<CarriableBase> stack = backStack;
 
         for (int i = stack.Count - 1; i >= 0; i--)
         {
-            Vector3 dropPosition = GetDropPosition(slotType, i);
-            stack[i].OnDropped(dropPosition);
+            if (deposited >= maxAmount)
+                break;
+
+            if (stack[i] is not Money money)
+                continue;
+
+            money.OnDropped(tile.transform.position);
+            stack.RemoveAt(i);
+            deposited++;
         }
 
-        stack.Clear();
+        UpdateStackPositions(CarrySlotType.Back);
+        return deposited;
     }
 
     public int GetCount(CarrySlotType slotType)
     {
         return GetStack(slotType).Count;
-    }
-
-    public bool HasSpace(CarrySlotType slotType)
-    {
-        return GetCount(slotType) < GetCapacity(slotType);
     }
 
     private void UpdateStackPositions(CarrySlotType slotType)
