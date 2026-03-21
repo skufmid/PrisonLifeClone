@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: Pickaxe
   m_EditorClassIdentifier: 
   toolName: Pickaxe
+  toolPrefab: {fileID: 3509548890546354192, guid: dac237a36527044498b65895b8b45dd5,
+    type: 3}
+  equipType: 0
+  positionOffset: {x: 0, y: 0.4, z: 0}
   interval: 1
   maxMineAmount: 1
   range: 1

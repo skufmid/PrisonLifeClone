@@ -12,8 +12,9 @@ public class MineTool : ScriptableObject
 {
     public string toolName;
 
-    public MineToolEquipType equipType;
     public GameObject toolPrefab;
+    public MineToolEquipType equipType;
+    public Vector3 positionOffset;
 
     public float interval = 1f;
     public int maxMineAmount = 1;

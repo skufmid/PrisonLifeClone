@@ -157,6 +157,7 @@ public class Mine : MonoBehaviour
         activeToolObject.transform.localRotation = Quaternion.identity;
         activeToolObject.transform.localScale = Vector3.one;
 
+        activeToolObject.transform.localPosition += CurrentTool.positionOffset;
         activeToolObject.SetActive(enable);
     }
 

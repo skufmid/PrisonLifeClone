@@ -160,7 +160,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &2908882052456108172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,7 +187,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultTool: {fileID: 11400000, guid: acacc972a26a15240998dd75077ed200, type: 2}
-  currentTool: {fileID: 0}
+  oneHandSocket: {fileID: 7174316873538043179}
+  twoHandSocket: {fileID: 0}
+  rideSocket: {fileID: 0}
 --- !u!95 &8083833984213834877
 Animator:
   serializedVersion: 5
@@ -197,7 +199,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3515296670346905849}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
+  m_Avatar: {fileID: 9000000, guid: b6a98fca1a1051942ba9ccc1bccf7ae3, type: 3}
   m_Controller: {fileID: 9100000, guid: 6543638e3f2da804b81a4a4b4fe92f4d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -209,3 +211,9 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &7174316873538043179 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6888806815857526915, guid: a4d4825539ffa9c43989f4506022c907,
+    type: 3}
+  m_PrefabInstance: {fileID: 4326198251627296168}
+  m_PrefabAsset: {fileID: 0}
