@@ -17,17 +17,21 @@ public abstract class ActionBase<TTarget> : MonoBehaviour where TTarget : Compon
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        TTarget target = other.GetComponent<TTarget>();
+        TryStart(target);
+    }
+
+    public virtual void TryStart(TTarget newTarget)
+    {
         if (IsActing) return;
-
-        TTarget newTarget = other.GetComponent<TTarget>();
         if (newTarget == null) return;
-
         if (!CanStart(newTarget)) return;
 
         target = newTarget;
 
         OnStarted();
         actionCoroutine = StartCoroutine(CoAction());
+
     }
     protected virtual bool CanStart(TTarget target)
     {
