@@ -8,15 +8,24 @@ public abstract class CharacterBase : MonoBehaviour
 
     protected CharacterController controller;
     protected Vector2 input;
+    protected Animator anim;
+
+    private const float RUN_THRESHOLD = 3f;
+    private const float MOVE_THRESHOLD = 0.1f;
 
     protected virtual void Awake()
     {
         controller = GetComponent<CharacterController>();
+        anim = GetComponent<Animator>();
     }
 
     protected virtual void Update()
     {
         Move();
+
+        // 테스트용 달리기 추가
+        //if (Input.GetKey(KeyCode.LeftShift)) moveSpeed = 5f;
+        //else moveSpeed = 1f;
     }
 
     // 입력은 외부에서 주입 (Player, AI 모두 대응 가능)
@@ -34,6 +43,9 @@ public abstract class CharacterBase : MonoBehaviour
 
         controller.Move(move * moveSpeed * Time.deltaTime);
 
+        float curSpeed = move.magnitude * moveSpeed;
+        anim.SetFloat("Speed", curSpeed);
+            
         Rotate(move);
     }
 
