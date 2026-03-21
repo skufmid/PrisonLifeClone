@@ -10,9 +10,6 @@ public abstract class CharacterBase : MonoBehaviour
     protected Vector2 input;
     protected Animator anim;
 
-    private const float RUN_THRESHOLD = 3f;
-    private const float MOVE_THRESHOLD = 0.1f;
-
     protected virtual void Awake()
     {
         controller = GetComponent<CharacterController>();

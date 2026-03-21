@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
-public class Mine : MonoBehaviour
+public class Mine : ActionBase<Rock>
 {
     [SerializeField] private MineTool defaultTool;
 
@@ -14,7 +13,7 @@ public class Mine : MonoBehaviour
     private MineTool currentTool;
     public MineTool CurrentTool
     {
-        get { return currentTool; }
+        get => currentTool;
         private set
         {
             currentTool = value;
@@ -25,20 +24,16 @@ public class Mine : MonoBehaviour
     private string startAnimName;
     private string stopAnimName;
 
-    private Coroutine miningCoroutine;
-    private CharacterBase owner;
     private Animator anim;
-
-    private Rock targetRock;
-
     private GameObject activeToolObject;
     private MineTool activeToolPrefabSource;
 
     private const int ROCK_LAYER = 1 << 6;
 
-    private void Awake()
+    protected override void Awake()
     {
-        owner = GetComponent<CharacterBase>();
+        base.Awake();
+
         anim = GetComponent<Animator>();
 
         if (CurrentTool == null)
@@ -58,56 +53,33 @@ public class Mine : MonoBehaviour
         stopAnimName = "Stop" + currentTool.toolName;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnStarted()
     {
-        Rock rock = other.GetComponent<Rock>();
-
-        if (rock != null && miningCoroutine == null)
-        {
-            rock.Interact(owner);
-        }
-    }
-
-    public void StartMining(Rock rock)
-    {
-        if (rock == null) return;
-        if (miningCoroutine != null) return;
-
-        targetRock = rock;
         EnableToolObject(true);
 
         if (anim != null && !string.IsNullOrEmpty(startAnimName))
             anim.SetTrigger(startAnimName);
-
-        miningCoroutine = StartCoroutine(CoMining());
     }
 
-    public void StopMining()
+    protected override void OnStopped()
     {
-        if (miningCoroutine == null) return;
-
         if (anim != null && !string.IsNullOrEmpty(stopAnimName))
             anim.SetTrigger(stopAnimName);
-
-        StopCoroutine(miningCoroutine);
-        miningCoroutine = null;
-        targetRock = null;
 
         EnableToolObject(false);
     }
 
-    private IEnumerator CoMining()
+    protected override IEnumerator CoAction()
     {
         while (true)
         {
-            if (targetRock == null)
+            if (target == null)
             {
-                StopMining();
+                StopAction();
                 yield break;
             }
 
             yield return new WaitForSeconds(CurrentTool.interval);
-
             MineOnce();
         }
     }
@@ -122,18 +94,16 @@ public class Mine : MonoBehaviour
         foreach (var hit in hits)
         {
             Rock rock = hit.GetComponent<Rock>();
-            if (rock != null)
-            {
-                rock.Mine(owner);
-                minedCount++;
-            }
+            if (rock == null) continue;
+
+            rock.Mine(owner);
+            minedCount++;
 
             if (minedCount >= CurrentTool.maxMineAmount)
                 break;
         }
 
-        if (minedCount == 0)
-            targetRock = null;
+        if (minedCount == 0) StopAction();
     }
 
     private void EnableToolObject(bool enable)
@@ -157,7 +127,6 @@ public class Mine : MonoBehaviour
         activeToolObject.transform.localRotation = Quaternion.identity;
         activeToolObject.transform.localScale = Vector3.one;
 
-        activeToolObject.transform.localPosition += CurrentTool.positionOffset;
         activeToolObject.SetActive(enable);
     }
 
