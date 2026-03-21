@@ -33,6 +33,17 @@ public class TileStack : StackHolderBase
         return TryAddToSlot(item, tileSlot);
     }
 
+    public bool HasItem(CarryItemType type)
+    {
+        if (tileSlot.items.Count >= 1
+            && tileSlot.items[0].ItemType == type)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public bool TryTakeLast(out CarriableBase item)
     {
         return TryTakeLastFromSlot(tileSlot, out item);

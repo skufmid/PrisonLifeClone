@@ -13,11 +13,9 @@ public class DepositTile : ActionTileBase
 
     protected override void ProcessCharacter(CharacterBase character)
     {
-        Debug.Log("ProcessCharacter");
         if (character == null) return;
         if (tileStack == null) return;
         if (tileStack.IsFull) return;
-        Debug.Log("ProcessCharacter ok");
 
         Carry carry = character.GetComponent<Carry>();
         if (carry == null) return;

@@ -92,7 +92,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileSlot:
     slotType: 2
-    anchor: {fileID: 0}
+    anchor: {fileID: 8380044082467568979}
     rows: 1
     cols: 1
     maxLayers: 10
