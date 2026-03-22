@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Money : CarriableBase
+public class MoneyCarriable : CarriableBase
 {
     public override CarrySlotType SlotType => CarrySlotType.Back;
 }

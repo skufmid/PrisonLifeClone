@@ -8,9 +8,13 @@ public class BuildingEntry : MonoBehaviour
     [SerializeField] private TileStack outputStack;
     [SerializeField] private BuildingEntryQueue prisonerQueue;
 
+    [Header("Reward")]
+    [SerializeField] private MoneyCarriable moneyPrefab;
+    [SerializeField] private int rewardMoneyCount = 6;
+
     [Header("Loop")]
     [SerializeField] private float giveInterval = 0.05f;
-    [SerializeField] private float nextPrisonerInterval = 1f;
+    [SerializeField] private float nextPrisonerInterval = 1.5f;
 
     [Header("Type")]
     [SerializeField] private CarryItemType requiredType = CarryItemType.Handcuff;
@@ -51,29 +55,56 @@ public class BuildingEntry : MonoBehaviour
         }
     }
 
+    // 죄수 1명을 "완료 처리"했을 때 true
     private bool TryProcessFrontPrisoner()
     {
         if (inputStack == null) return false;
+        if (outputStack == null) return false;
         if (prisonerQueue == null) return false;
+        if (moneyPrefab == null) return false;
 
         Prisoner prisoner = prisonerQueue.GetFrontPrisoner();
         if (prisoner == null) return false;
         if (!prisoner.IsAtTarget) return false;
         if (!inputStack.HasItem(requiredType)) return false;
 
+        bool wasReadyBefore = prisoner.IsReadyForJailQueue;
+
         if (!inputStack.TryTakeLast(out CarriableBase handcuffItem)) return false;
         if (handcuffItem == null) return false;
 
         bool received = prisoner.TryReceiveHandcuff();
 
-        if (received)
+        if (!received)
         {
-            Destroy(handcuffItem.gameObject);
+            inputStack.TryAdd(handcuffItem);
+            return false;
+        }
 
+        Destroy(handcuffItem.gameObject);
+
+        bool isReadyNow = prisoner.IsReadyForJailQueue;
+
+        if (!wasReadyBefore && isReadyNow)
+        {
+            GiveRewardMoney();
             return true;
         }
 
-        inputStack.TryAdd(handcuffItem);
         return false;
+    }
+
+    private void GiveRewardMoney()
+    {
+        for (int i = 0; i < rewardMoneyCount; i++)
+        {
+            MoneyCarriable money = Instantiate(moneyPrefab);
+
+            if (!outputStack.TryAdd(money))
+            {
+                Destroy(money.gameObject);
+                break;
+            }
+        }
     }
 }
