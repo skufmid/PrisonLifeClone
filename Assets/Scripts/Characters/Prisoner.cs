@@ -156,8 +156,6 @@ public class Prisoner : CharacterBase
         targetPosition = GameManager.Instance.PrisonPoint.position;
         hasTargetPosition = true;
 
-        SetBodyCollidersEnabled(false);
-
         // 필요하면 여기서 입장 애니메이션
         // animator.SetBool("IsHandcuffed", true);
     }
@@ -166,26 +164,9 @@ public class Prisoner : CharacterBase
     {
         hasTargetPosition = false;
         SetInput(Vector2.zero);
-        SetBodyCollidersEnabled(true);
 
         // 필요하면 도착 후 상태 처리
         // animator.SetBool("IsHandcuffed", true);
-    }
-
-    private void SetBodyCollidersEnabled(bool enabled)
-    {
-        if (collidersToDisableWhileEntering == null) return;
-
-        for (int i = 0; i < collidersToDisableWhileEntering.Length; i++)
-        {
-            Collider col = collidersToDisableWhileEntering[i];
-            if (col == null) continue;
-
-            // CharacterController가 Collider 계열인 경우 이동이 끊길 수 있으니 제외
-            if (col is CharacterController) continue;
-
-            col.enabled = enabled;
-        }
     }
 
     private void OnDisable()
