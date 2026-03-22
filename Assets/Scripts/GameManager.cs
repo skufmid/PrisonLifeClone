@@ -27,6 +27,6 @@ public class GameManager : MonoBehaviour
 
     private void Init()
     {
-        PrisonPoint = FindAnyObjectByType<Prison>().transform;
+        PrisonPoint = FindAnyObjectByType<Jail>().transform;
     }
 }

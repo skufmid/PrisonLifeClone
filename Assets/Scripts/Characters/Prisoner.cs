@@ -15,7 +15,7 @@ public class Prisoner : CharacterBase
     [SerializeField] private int minRequiredHandcuff = 2;
     [SerializeField] private int maxRequiredHandcuff = 4;
 
-    [Header("Prison Enter")]
+    [Header("Jail Enter")]
     [SerializeField] private Collider[] collidersToDisableWhileEntering;
 
     private PrisonerQueue currentQueue;

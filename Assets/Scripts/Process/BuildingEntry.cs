@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PrisonerHandcuffGate : MonoBehaviour
+public class BuildingEntry : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TileStack inputStack;
