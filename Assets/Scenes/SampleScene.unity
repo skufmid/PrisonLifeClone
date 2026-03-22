@@ -1981,6 +1981,31 @@ PrefabInstance:
       propertyPath: tileSlot.slotType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
+        type: 3}
+      propertyPath: tileSlot.itemSpacing.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
+        type: 3}
+      propertyPath: tileSlot.itemSpacing.z
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
+        type: 3}
+      propertyPath: tileSlot.rotationEuler.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
+        type: 3}
+      propertyPath: tileSlot.rotationEuler.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
+        type: 3}
+      propertyPath: tileSlot.useCustomRotation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8380044082467568979, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
         type: 3}
       propertyPath: m_LocalPosition.x
