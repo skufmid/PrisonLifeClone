@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PrisonerQueue : MonoBehaviour
+public abstract class PrisonerQueue : MonoBehaviour
 {
     [Header("Queue Points (Front -> Back)")]
     [SerializeField] private Transform[] queuePoints;
@@ -13,7 +13,7 @@ public class PrisonerQueue : MonoBehaviour
 
     public int Count => prisoners.Count;
 
-    public void Enqueue(Prisoner prisoner)
+    public virtual void Enqueue(Prisoner prisoner)
     {
         if (prisoner == null) return;
         if (prisoners.Contains(prisoner)) return;
@@ -22,10 +22,9 @@ public class PrisonerQueue : MonoBehaviour
         RefreshQueueSlots();
     }
 
-    public void Remove(Prisoner prisoner)
+    public virtual void Remove(Prisoner prisoner)
     {
         if (prisoner == null) return;
-
         if (!prisoners.Remove(prisoner)) return;
 
         RefreshQueueSlots();
@@ -45,9 +44,9 @@ public class PrisonerQueue : MonoBehaviour
         return prisoners[0];
     }
 
-    public void PopFront()
+    public Prisoner PopFront()
     {
-        if (prisoners.Count == 0) return;
+        if (prisoners.Count == 0) return null;
 
         Prisoner front = prisoners[0];
         prisoners.RemoveAt(0);
@@ -56,9 +55,10 @@ public class PrisonerQueue : MonoBehaviour
             front.ClearQueueSlot(this);
 
         RefreshQueueSlots();
+        return front;
     }
 
-    private void RefreshQueueSlots()
+    protected void RefreshQueueSlots()
     {
         for (int i = 0; i < prisoners.Count; i++)
         {
@@ -79,8 +79,8 @@ public class PrisonerQueue : MonoBehaviour
 
         Transform lastPoint = queuePoints[queuePoints.Length - 1];
         Vector3 extendDir = GetOverflowDirection();
-
         int overflowIndex = index - queuePoints.Length + 1;
+
         return lastPoint.position + extendDir * overflowSpacing * overflowIndex;
     }
 
@@ -115,9 +115,7 @@ public class PrisonerQueue : MonoBehaviour
             Gizmos.DrawWireSphere(queuePoints[i].position, 0.15f);
 
             if (i < queuePoints.Length - 1 && queuePoints[i + 1] != null)
-            {
                 Gizmos.DrawLine(queuePoints[i].position, queuePoints[i + 1].position);
-            }
         }
     }
 #endif

@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 171103852}
   - component: {fileID: 171103853}
   m_Layer: 0
-  m_Name: PrisonerQueue
+  m_Name: BuildingEntryQueue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -417,7 +417,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 171103851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb64d3e700e0a384dae87677a7809d78, type: 3}
+  m_Script: {fileID: 11500000, guid: fa865b3e14b03da46ac0d78c009083dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   queuePoints:
@@ -425,6 +425,7 @@ MonoBehaviour:
   - {fileID: 382242248}
   - {fileID: 819764916}
   overflowSpacing: 1.2
+  jailEntryQueue: {fileID: 1986072740}
 --- !u!1 &205254707
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,7 +1078,7 @@ GameObject:
   - component: {fileID: 651577564}
   - component: {fileID: 651577565}
   m_Layer: 0
-  m_Name: PrisonerHandcuffGate
+  m_Name: BuildingEntry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1115,6 +1116,7 @@ MonoBehaviour:
   inputStack: {fileID: 859162450}
   prisonerQueue: {fileID: 171103853}
   giveInterval: 0.05
+  nextPrisonerInterval: 1.5
   requiredType: 2
 --- !u!4 &651940803 stripped
 Transform:
@@ -1165,6 +1167,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &697007295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 697007296}
+  m_Layer: 0
+  m_Name: QueuePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &697007296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697007295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1986072739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &737944327
 PrefabInstance:
@@ -1411,6 +1444,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 24002706}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &867178697
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 867178698}
+  m_Layer: 0
+  m_Name: QueuePoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &867178698
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 867178697}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1986072739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &970893485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7231221494519288254, guid: 5059f15b2c1a65e46b385b37e48a67c7,
@@ -1585,7 +1649,7 @@ GameObject:
   - component: {fileID: 1548807428}
   - component: {fileID: 1548807431}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Jail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1689,6 +1753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b4f9e1f08ba7524b9a86ddf3338b753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxCapacity: 0
+  entryPoint: {fileID: 0}
 --- !u!1 &1590683800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1732,9 +1798,10 @@ Transform:
   - {fileID: 114341049}
   - {fileID: 1904834764}
   - {fileID: 11931618}
-  - {fileID: 171103852}
   - {fileID: 217372613}
+  - {fileID: 171103852}
   - {fileID: 651577564}
+  - {fileID: 1986072739}
   - {fileID: 1548807427}
   m_Father: {fileID: 205254708}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2192,6 +2259,59 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5059f15b2c1a65e46b385b37e48a67c7, type: 3}
+--- !u!1 &1986072738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1986072739}
+  - component: {fileID: 1986072740}
+  m_Layer: 0
+  m_Name: JailEntryQueue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1986072739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986072738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9, y: 0, z: -7.9999995}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 697007296}
+  - {fileID: 867178698}
+  - {fileID: 2125709839}
+  m_Father: {fileID: 1590683801}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1986072740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986072738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5518241fb4b8ca24ab80679272535a27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  queuePoints:
+  - {fileID: 697007296}
+  - {fileID: 867178698}
+  - {fileID: 2125709839}
+  overflowSpacing: 1.2
+  jail: {fileID: 1548807431}
 --- !u!1001 &2003564215
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2451,6 +2571,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2086962092}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2125709838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2125709839}
+  m_Layer: 0
+  m_Name: QueuePoint (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2125709839
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2125709838}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1986072739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2129684108
 PrefabInstance:
   m_ObjectHideFlags: 0

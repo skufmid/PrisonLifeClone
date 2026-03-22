@@ -1,18 +1,29 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Jail : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private int maxCapacity = 4;
+    [SerializeField] private Transform entryPoint;
+
+    private readonly HashSet<Prisoner> prisoners = new();
+
+    public bool CanAcceptPrisoner => prisoners.Count < maxCapacity;
+    public Transform EntryPoint => entryPoint != null ? entryPoint : transform;
+
+    public bool TryAccept(Prisoner prisoner)
     {
-        
+        if (prisoner == null) return false;
+        if (!CanAcceptPrisoner) return false;
+        if (prisoners.Contains(prisoner)) return false;
+
+        prisoners.Add(prisoner);
+        return true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Remove(Prisoner prisoner)
     {
-        
+        if (prisoner == null) return;
+        prisoners.Remove(prisoner);
     }
 }

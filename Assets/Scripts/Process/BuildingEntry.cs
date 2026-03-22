@@ -5,7 +5,7 @@ public class BuildingEntry : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TileStack inputStack;
-    [SerializeField] private PrisonerQueue prisonerQueue;
+    [SerializeField] private BuildingEntryQueue prisonerQueue;
 
     [Header("Loop")]
     [SerializeField] private float giveInterval = 0.05f;
@@ -15,13 +15,13 @@ public class BuildingEntry : MonoBehaviour
     [SerializeField] private CarryItemType requiredType = CarryItemType.Handcuff;
 
     private Coroutine coLoop;
-    private WaitForSeconds GiveIntervalWait;
-    private WaitForSeconds NextPrisonerWait;
+    private WaitForSeconds giveIntervalWait;
+    private WaitForSeconds nextPrisonerWait;
 
     private void Awake()
     {
-        GiveIntervalWait = new WaitForSeconds(giveInterval);
-        NextPrisonerWait = new WaitForSeconds(nextPrisonerInterval);
+        giveIntervalWait = new WaitForSeconds(giveInterval);
+        nextPrisonerWait = new WaitForSeconds(nextPrisonerInterval);
     }
 
     private void OnEnable()
@@ -44,24 +44,19 @@ public class BuildingEntry : MonoBehaviour
         while (true)
         {
             if (TryProcessFrontPrisoner())
-            {
-                yield return NextPrisonerWait;
-            }
+                yield return nextPrisonerWait;
             else
-            {
-                yield return GiveIntervalWait;
-            }
+                yield return giveIntervalWait;
         }
     }
 
-    private bool TryProcessFrontPrisoner() // Prisoner가 감옥에 들어갔을 때 True 반환
+    private bool TryProcessFrontPrisoner()
     {
         if (inputStack == null) return false;
         if (prisonerQueue == null) return false;
 
         Prisoner prisoner = prisonerQueue.GetFrontPrisoner();
         if (prisoner == null) return false;
-        if (prisoner.IsEnteringPrison) return false;
         if (!prisoner.IsAtTarget) return false;
         if (!inputStack.HasItem(requiredType)) return false;
 
@@ -73,17 +68,10 @@ public class BuildingEntry : MonoBehaviour
         if (received)
         {
             Destroy(handcuffItem.gameObject);
+            return true;
+        }
 
-            if (prisoner.IsReadyToEnter)
-            {
-                prisoner.StartEnterPrison();
-                return true;
-            }
-        }
-        else
-        {
-            inputStack.TryAdd(handcuffItem);
-        }
+        inputStack.TryAdd(handcuffItem);
         return false;
     }
 }

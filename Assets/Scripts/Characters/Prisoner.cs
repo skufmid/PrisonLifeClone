@@ -5,7 +5,8 @@ public class Prisoner : CharacterBase
     private enum PrisonerState
     {
         Queueing,
-        EnteringPrison
+        EnteringJail,
+        InJail
     }
 
     [Header("Queue Move")]
@@ -24,8 +25,10 @@ public class Prisoner : CharacterBase
     private bool hasTargetPosition;
 
     private PrisonerState state = PrisonerState.Queueing;
+
     private int requiredHandcuff;
     private int currentHandcuff;
+    private Jail currentJail;
 
     public int QueueIndex => queueIndex;
     public bool IsAtTarget => !hasTargetPosition || IsCloseEnough(targetPosition);
@@ -34,8 +37,8 @@ public class Prisoner : CharacterBase
     public int RequiredHandcuff => requiredHandcuff;
     public int CurrentHandcuff => currentHandcuff;
     public int RemainingHandcuff => Mathf.Max(0, requiredHandcuff - currentHandcuff);
-    public bool IsReadyToEnter => currentHandcuff >= requiredHandcuff;
-    public bool IsEnteringPrison => state == PrisonerState.EnteringPrison;
+    public bool IsReadyForJailQueue => currentHandcuff >= requiredHandcuff;
+    public bool IsEnteringJail => state == PrisonerState.EnteringJail;
 
     protected virtual void Start()
     {
@@ -64,10 +67,8 @@ public class Prisoner : CharacterBase
         {
             SetInput(Vector2.zero);
 
-            if (state == PrisonerState.EnteringPrison)
-            {
-                FinishEnterPrison();
-            }
+            if (state == PrisonerState.EnteringJail)
+                FinishEnterJail();
 
             return;
         }
@@ -107,7 +108,8 @@ public class Prisoner : CharacterBase
 
     public void SetQueueSlot(PrisonerQueue queue, int index, Vector3 position)
     {
-        if (state == PrisonerState.EnteringPrison) return;
+        if (state == PrisonerState.EnteringJail || state == PrisonerState.InJail)
+            return;
 
         currentQueue = queue;
         queueIndex = index;
@@ -128,21 +130,16 @@ public class Prisoner : CharacterBase
     public bool TryReceiveHandcuff()
     {
         if (state != PrisonerState.Queueing) return false;
-        if (IsReadyToEnter) return false;
+        if (IsReadyForJailQueue) return false;
 
         currentHandcuff++;
-
-        // 필요하면 여기서 수갑 착용 애니메이션/이펙트 추가
-        // animator.SetTrigger("WearHandcuff");
-
         return true;
     }
 
-    public void StartEnterPrison()
+    public void EnterJail(Jail jail)
     {
-        if (!IsReadyToEnter) return;
-        if (state == PrisonerState.EnteringPrison) return;
-        if (GameManager.Instance.PrisonPoint == null) return;
+        if (jail == null) return;
+        if (state == PrisonerState.EnteringJail || state == PrisonerState.InJail) return;
 
         if (currentQueue != null)
         {
@@ -152,21 +149,30 @@ public class Prisoner : CharacterBase
             oldQueue.Remove(this);
         }
 
-        state = PrisonerState.EnteringPrison;
-        targetPosition = GameManager.Instance.PrisonPoint.position;
+        currentJail = jail;
+        state = PrisonerState.EnteringJail;
+        targetPosition = jail.EntryPoint.position;
         hasTargetPosition = true;
 
-        // 필요하면 여기서 입장 애니메이션
-        // animator.SetBool("IsHandcuffed", true);
+        SetEnteringCollidersEnabled(false);
     }
 
-    private void FinishEnterPrison()
+    private void FinishEnterJail()
     {
         hasTargetPosition = false;
         SetInput(Vector2.zero);
+        state = PrisonerState.InJail;
+    }
 
-        // 필요하면 도착 후 상태 처리
-        // animator.SetBool("IsHandcuffed", true);
+    private void SetEnteringCollidersEnabled(bool enabled)
+    {
+        if (collidersToDisableWhileEntering == null) return;
+
+        for (int i = 0; i < collidersToDisableWhileEntering.Length; i++)
+        {
+            if (collidersToDisableWhileEntering[i] != null)
+                collidersToDisableWhileEntering[i].enabled = enabled;
+        }
     }
 
     private void OnDisable()
