@@ -46,7 +46,7 @@ public class ItemConverter : MonoBehaviour
         {
             Destroy(inputItem.gameObject);
 
-            CarriableBase outputItem = Instantiate(outputPrefab);
+            CarriableBase outputItem = Instantiate(outputPrefab, outputStack.transform);
             if (!outputStack.TryAdd(outputItem))
             {
                 Destroy(outputItem.gameObject);

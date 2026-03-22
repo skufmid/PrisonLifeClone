@@ -17,7 +17,7 @@ public class Rock : MonoBehaviour
         Carry carry = owner.GetComponent<Carry>();
         if (carry == null) return;
 
-        RockCarriable rockCarriableGO = Instantiate(rockCarriable);
+        RockCarriable rockCarriableGO = Instantiate(rockCarriable, transform);
         carry.TryAdd(rockCarriableGO);
     }
 }
