@@ -5,11 +5,12 @@ public class BuildingEntry : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TileStack inputStack;
+    [SerializeField] private TileStack outputStack;
     [SerializeField] private BuildingEntryQueue prisonerQueue;
 
     [Header("Loop")]
     [SerializeField] private float giveInterval = 0.05f;
-    [SerializeField] private float nextPrisonerInterval = 1.5f;
+    [SerializeField] private float nextPrisonerInterval = 1f;
 
     [Header("Type")]
     [SerializeField] private CarryItemType requiredType = CarryItemType.Handcuff;
@@ -68,6 +69,7 @@ public class BuildingEntry : MonoBehaviour
         if (received)
         {
             Destroy(handcuffItem.gameObject);
+
             return true;
         }
 
