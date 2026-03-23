@@ -1,12 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance => _instance;
-    public int Money { get; private set; }
+
+    private int money;
+    public int Money
+    {
+        get => money;
+        private set
+        {
+            if (money == value) return;
+            money = Mathf.Max(0, value);
+            OnMoneyChanged?.Invoke(money);
+        }
+    }
+
+    public event Action<int> OnMoneyChanged;
+
+    private const int MoneyPerCarriable = 5;
 
     private void Awake()
     {
@@ -18,7 +32,15 @@ public class GameManager : MonoBehaviour
         else if (_instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+
+        Init();
+    }
+
+    private void Init()
+    {
+        Money = 0;
     }
 
     public void PlusMoney(int value)
@@ -29,5 +51,17 @@ public class GameManager : MonoBehaviour
     public void UseMoney(int value)
     {
         Money -= value;
+    }
+
+    public void AddMoneyCarriable(int count = 1)
+    {
+        if (count <= 0) return;
+        Money += count * MoneyPerCarriable;
+    }
+
+    public void RemoveMoneyCarriable(int count = 1)
+    {
+        if (count <= 0) return;
+        Money -= count * MoneyPerCarriable;
     }
 }

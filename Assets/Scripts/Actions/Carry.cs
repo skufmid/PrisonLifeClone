@@ -16,6 +16,7 @@ public class Carry : StackHolderBase
     {
         slotType = CarrySlotType.Back
     };
+    public override bool CountsAsMoneyInventory => true;
 
     public bool TryAdd(CarriableBase item)
     {

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public abstract class StackHolderBase : MonoBehaviour
 {
+    public virtual bool CountsAsMoneyInventory => false;
+
     protected bool TryAddToSlot(CarriableBase item, StackSlotData slot)
     {
         if (item == null) return false;
@@ -55,9 +57,7 @@ public abstract class StackHolderBase : MonoBehaviour
 
             slot.items.RemoveAt(i);
             candidate.OnReleased();
-
             UpdateSlotPositions(slot);
-
             item = candidate;
             return true;
         }
@@ -115,13 +115,11 @@ public abstract class StackHolderBase : MonoBehaviour
         {
             float xOffset = (slot.cols - 1) * slot.itemSpacing.x * 0.5f;
             float zOffset = (slot.rows - 1) * slot.itemSpacing.z * 0.5f;
-
             x -= xOffset;
             z -= zOffset;
         }
 
         float y = layer * slot.itemSpacing.y;
-
         return new Vector3(x, y, z);
     }
 
