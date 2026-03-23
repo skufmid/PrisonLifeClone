@@ -4,40 +4,48 @@ using UnityEngine.Events;
 [RequireComponent(typeof(TileStack))]
 public class PurchaseTile : ActionTileBase
 {
-    [Header("Price")]
-    [SerializeField] private int price = 10;
+    [Header("Purchase Target")]
+    [SerializeField] private MonoBehaviour purchaseTargetSource;
 
     [Header("Deposit")]
     [SerializeField] private bool destroyMoneyVisualOnDeposit = true;
 
     [Header("State")]
-    [SerializeField] private bool disableAfterPurchase = true;
+    [SerializeField] private bool disableWhenTargetCannotPurchase = true;
 
     [Header("Events")]
     [SerializeField] private UnityEvent onProgressChanged;
     [SerializeField] private UnityEvent onPurchased;
 
     private TileStack tileStack;
+    private IPurchaseTarget purchaseTarget;
     private int depositedAmount;
-    private bool isPurchased;
 
-    public int Price => price;
+    public int Price => purchaseTarget?.Price ?? 0;
     public int CurrentAmount => depositedAmount;
-    public int RemainingAmount => Mathf.Max(0, price - depositedAmount);
-    public bool IsPurchased => isPurchased;
+    public int RemainingAmount => Mathf.Max(0, Price - depositedAmount);
+    public bool CanPurchase => purchaseTarget != null && purchaseTarget.CanPurchase();
 
     protected override void Awake()
     {
         base.Awake();
+
         tileStack = GetComponent<TileStack>();
+        purchaseTarget = purchaseTargetSource as IPurchaseTarget;
     }
 
     protected override void ProcessCharacter(CharacterBase character)
     {
         if (character == null) return;
         if (tileStack == null) return;
-        if (isPurchased) return;
-        if (depositedAmount >= price)
+        if (purchaseTarget == null) return;
+        if (!purchaseTarget.CanPurchase())
+        {
+            TryDisableTile();
+            return;
+        }
+
+        if (depositedAmount >= Price)
         {
             CompletePurchase();
             return;
@@ -71,7 +79,7 @@ public class PurchaseTile : ActionTileBase
         depositedAmount++;
         onProgressChanged?.Invoke();
 
-        if (depositedAmount >= price)
+        if (depositedAmount >= Price)
         {
             CompletePurchase();
         }
@@ -79,12 +87,43 @@ public class PurchaseTile : ActionTileBase
 
     private void CompletePurchase()
     {
-        if (isPurchased) return;
+        if (purchaseTarget == null) return;
+        if (!purchaseTarget.CanPurchase()) return;
 
-        isPurchased = true;
+        purchaseTarget.OnPurchased();
         onPurchased?.Invoke();
 
-        if (disableAfterPurchase)
-            gameObject.SetActive(false);
+        depositedAmount = 0;
+        onProgressChanged?.Invoke();
+
+        ClearDepositedVisualsIfNeeded();
+
+        if (!purchaseTarget.IsRepeatable)
+        {
+            TryDisableTile();
+        }
+    }
+
+    private void ClearDepositedVisualsIfNeeded()
+    {
+        if (destroyMoneyVisualOnDeposit) return;
+        if (tileStack == null) return;
+
+        while (tileStack.TryTakeLast(out CarriableBase item))
+        {
+            if (item != null)
+            {
+                Destroy(item.gameObject);
+            }
+        }
+    }
+
+    private void TryDisableTile()
+    {
+        if (!disableWhenTargetCannotPurchase) return;
+        if (purchaseTarget == null) return;
+        if (purchaseTarget.CanPurchase()) return;
+
+        gameObject.SetActive(false);
     }
 }
