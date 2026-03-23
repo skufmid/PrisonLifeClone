@@ -7,9 +7,6 @@ public abstract class PurchaseTargetBase : MonoBehaviour, IPurchaseTarget
     [SerializeField] private int price = 10;
     [SerializeField] private bool isRepeatable = false;
 
-    [Header("Events")]
-    [SerializeField] private UnityEvent onPurchased;
-
     private bool isPurchasedOnce;
 
     public int Price => price;
@@ -31,7 +28,6 @@ public abstract class PurchaseTargetBase : MonoBehaviour, IPurchaseTarget
         ApplyPurchase();
 
         isPurchasedOnce = true;
-        onPurchased?.Invoke();
     }
 
     protected abstract void ApplyPurchase();
