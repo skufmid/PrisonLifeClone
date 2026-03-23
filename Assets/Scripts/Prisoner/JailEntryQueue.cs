@@ -2,27 +2,25 @@ using UnityEngine;
 
 public class JailEntryQueue : PrisonerQueue
 {
-    [SerializeField] private Jail jail;
+    [SerializeField] private JailQueue jailQueue;
 
     private void Update()
     {
-        TryEnterFrontPrisoner();
+        TrySendFrontPrisoner();
     }
 
-    private void TryEnterFrontPrisoner()
+    private void TrySendFrontPrisoner()
     {
-        if (jail == null) return;
-        if (!jail.CanAcceptPrisoner) return;
+        if (jailQueue == null) return;
 
         Prisoner frontPrisoner = GetFrontPrisoner();
         if (frontPrisoner == null) return;
         if (!frontPrisoner.IsAtTarget) return;
-
-        if (!jail.TryAccept(frontPrisoner)) return;
+        if (!jailQueue.CanEnqueue(frontPrisoner)) return;
 
         Prisoner prisoner = PopFront();
         if (prisoner == null) return;
 
-        prisoner.EnterJail(jail);
+        jailQueue.Enqueue(prisoner);
     }
 }

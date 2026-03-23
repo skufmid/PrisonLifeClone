@@ -4,38 +4,43 @@ using UnityEngine;
 public abstract class PrisonerQueue : MonoBehaviour
 {
     [Header("Queue Points (Front -> Back)")]
-    [SerializeField] private Transform[] queuePoints;
+    [SerializeField] protected Transform[] queuePoints;
 
     [Header("Overflow")]
-    [SerializeField] private float overflowSpacing = 1.2f;
+    [SerializeField] protected float overflowSpacing = 1.2f;
 
-    private readonly List<Prisoner> prisoners = new();
+    protected readonly List<Prisoner> prisoners = new();
 
     public int Count => prisoners.Count;
+    public bool IsEmpty => prisoners.Count == 0;
 
-    public virtual void Enqueue(Prisoner prisoner)
+    public virtual bool CanEnqueue(Prisoner prisoner)
     {
-        if (prisoner == null) return;
-        if (prisoners.Contains(prisoner)) return;
+        return prisoner != null && !prisoners.Contains(prisoner);
+    }
+
+    public virtual bool Enqueue(Prisoner prisoner)
+    {
+        if (!CanEnqueue(prisoner)) return false;
 
         prisoners.Add(prisoner);
         RefreshQueueSlots();
+        return true;
     }
 
-    public virtual void Remove(Prisoner prisoner)
+    public virtual bool Remove(Prisoner prisoner)
     {
-        if (prisoner == null) return;
-        if (!prisoners.Remove(prisoner)) return;
+        if (prisoner == null) return false;
+        if (!prisoners.Remove(prisoner)) return false;
 
+        prisoner.ClearQueueSlot(this);
         RefreshQueueSlots();
+        return true;
     }
 
     public bool IsFront(Prisoner prisoner)
     {
-        if (prisoner == null) return false;
-        if (prisoners.Count == 0) return false;
-
-        return prisoners[0] == prisoner;
+        return prisoners.Count > 0 && prisoners[0] == prisoner;
     }
 
     public Prisoner GetFrontPrisoner()
@@ -58,7 +63,7 @@ public abstract class PrisonerQueue : MonoBehaviour
         return front;
     }
 
-    protected void RefreshQueueSlots()
+    protected virtual void RefreshQueueSlots()
     {
         for (int i = 0; i < prisoners.Count; i++)
         {
@@ -69,7 +74,7 @@ public abstract class PrisonerQueue : MonoBehaviour
         }
     }
 
-    private Vector3 GetQueuePosition(int index)
+    protected virtual Vector3 GetQueuePosition(int index)
     {
         if (queuePoints == null || queuePoints.Length == 0)
             return transform.position;
@@ -78,13 +83,13 @@ public abstract class PrisonerQueue : MonoBehaviour
             return queuePoints[index].position;
 
         Transform lastPoint = queuePoints[queuePoints.Length - 1];
-        Vector3 extendDir = GetOverflowDirection();
+        Vector3 overflowDir = GetOverflowDirection();
         int overflowIndex = index - queuePoints.Length + 1;
 
-        return lastPoint.position + extendDir * overflowSpacing * overflowIndex;
+        return lastPoint.position + overflowDir * overflowSpacing * overflowIndex;
     }
 
-    private Vector3 GetOverflowDirection()
+    protected virtual Vector3 GetOverflowDirection()
     {
         if (queuePoints == null || queuePoints.Length == 0)
             return -transform.forward;
@@ -100,23 +105,4 @@ public abstract class PrisonerQueue : MonoBehaviour
 
         return dir.normalized;
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        if (queuePoints == null || queuePoints.Length == 0) return;
-
-        Gizmos.color = Color.cyan;
-
-        for (int i = 0; i < queuePoints.Length; i++)
-        {
-            if (queuePoints[i] == null) continue;
-
-            Gizmos.DrawWireSphere(queuePoints[i].position, 0.15f);
-
-            if (i < queuePoints.Length - 1 && queuePoints[i + 1] != null)
-                Gizmos.DrawLine(queuePoints[i].position, queuePoints[i + 1].position);
-        }
-    }
-#endif
 }

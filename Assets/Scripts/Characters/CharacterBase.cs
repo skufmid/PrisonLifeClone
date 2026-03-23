@@ -19,13 +19,8 @@ public abstract class CharacterBase : MonoBehaviour
     protected virtual void Update()
     {
         Move();
-
-        // 테스트용 달리기 추가
-        //if (Input.GetKey(KeyCode.LeftShift)) moveSpeed = 5f;
-        //else moveSpeed = 1f;
     }
 
-    // 입력은 외부에서 주입 (Player, AI 모두 대응 가능)
     public virtual void SetInput(Vector2 inputValue)
     {
         input = inputValue;
@@ -41,8 +36,10 @@ public abstract class CharacterBase : MonoBehaviour
         controller.Move(move * moveSpeed * Time.deltaTime);
 
         float curSpeed = move.magnitude * moveSpeed;
-        anim.SetFloat("Speed", curSpeed);
-            
+
+        if (anim != null)
+            anim.SetFloat("Speed", curSpeed);
+
         Rotate(move);
     }
 

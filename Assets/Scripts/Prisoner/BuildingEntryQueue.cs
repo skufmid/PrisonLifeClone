@@ -6,17 +6,18 @@ public class BuildingEntryQueue : PrisonerQueue
 
     private void Update()
     {
-        TryMoveFrontPrisonerToJailQueue();
+        TrySendFrontPrisoner();
     }
 
-    private void TryMoveFrontPrisonerToJailQueue()
+    private void TrySendFrontPrisoner()
     {
         if (jailEntryQueue == null) return;
 
         Prisoner frontPrisoner = GetFrontPrisoner();
         if (frontPrisoner == null) return;
         if (!frontPrisoner.IsAtTarget) return;
-        if (!frontPrisoner.IsReadyForJailQueue) return;
+        if (!frontPrisoner.IsReadyForJailEntry) return;
+        if (!jailEntryQueue.CanEnqueue(frontPrisoner)) return;
 
         Prisoner prisoner = PopFront();
         if (prisoner == null) return;

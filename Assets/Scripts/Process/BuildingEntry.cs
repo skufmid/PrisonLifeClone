@@ -55,20 +55,17 @@ public class BuildingEntry : MonoBehaviour
         }
     }
 
-    // 죄수 1명을 "완료 처리"했을 때 true
     private bool TryProcessFrontPrisoner()
     {
         if (inputStack == null) return false;
-        if (outputStack == null) return false;
         if (prisonerQueue == null) return false;
-        if (moneyPrefab == null) return false;
 
         Prisoner prisoner = prisonerQueue.GetFrontPrisoner();
         if (prisoner == null) return false;
         if (!prisoner.IsAtTarget) return false;
         if (!inputStack.HasItem(requiredType)) return false;
 
-        bool wasReadyBefore = prisoner.IsReadyForJailQueue;
+        bool wasReadyBefore = prisoner.IsReadyForJailEntry;
 
         if (!inputStack.TryTakeLast(out CarriableBase handcuffItem)) return false;
         if (handcuffItem == null) return false;
@@ -83,7 +80,7 @@ public class BuildingEntry : MonoBehaviour
 
         Destroy(handcuffItem.gameObject);
 
-        bool isReadyNow = prisoner.IsReadyForJailQueue;
+        bool isReadyNow = prisoner.IsReadyForJailEntry;
 
         if (!wasReadyBefore && isReadyNow)
         {
@@ -96,6 +93,9 @@ public class BuildingEntry : MonoBehaviour
 
     private void GiveRewardMoney()
     {
+        if (outputStack == null) return;
+        if (moneyPrefab == null) return;
+
         for (int i = 0; i < rewardMoneyCount; i++)
         {
             MoneyCarriable money = Instantiate(moneyPrefab);

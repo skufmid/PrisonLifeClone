@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Prisoner : CharacterBase
@@ -6,7 +5,6 @@ public class Prisoner : CharacterBase
     private enum PrisonerState
     {
         Queueing,
-        EnteringJail,
         InJail
     }
 
@@ -18,38 +16,29 @@ public class Prisoner : CharacterBase
     [SerializeField] private int maxRequiredHandcuff = 4;
 
     private PrisonerQueue currentQueue;
+    private JailQueue currentJailQueue;
     private int queueIndex = -1;
     private Vector3 targetPosition;
     private bool hasTargetPosition;
 
     private PrisonerState state = PrisonerState.Queueing;
-
     private int requiredHandcuff;
     private int currentHandcuff;
-    private Jail currentJail;
 
     public int QueueIndex => queueIndex;
     public bool IsAtTarget => !hasTargetPosition || IsCloseEnough(targetPosition);
-    public bool IsFrontPrisoner => currentQueue != null && currentQueue.IsFront(this);
 
     public int RequiredHandcuff => requiredHandcuff;
     public int CurrentHandcuff => currentHandcuff;
     public int RemainingHandcuff => Mathf.Max(0, requiredHandcuff - currentHandcuff);
-    public bool IsReadyForJailQueue => currentHandcuff >= requiredHandcuff;
-    public bool IsEnteringJail => state == PrisonerState.EnteringJail;
+
+    public bool IsReadyForJailEntry => currentHandcuff >= requiredHandcuff;
+    public bool IsInJail => state == PrisonerState.InJail;
 
     protected virtual void Start()
     {
         requiredHandcuff = Random.Range(minRequiredHandcuff, maxRequiredHandcuff + 1);
         currentHandcuff = 0;
-
-        Debug.Log("detectCollisions: " + controller.detectCollisions);
-
-        Collider[] cols = GetComponentsInChildren<Collider>();
-        for (int i = 0; i < cols.Length; i++)
-        {
-            Debug.Log(cols[i].name + " / enabled: " + cols[i].enabled + " / type: " + cols[i].GetType().Name);
-        }
     }
 
     protected override void Update()
@@ -72,10 +61,6 @@ public class Prisoner : CharacterBase
         if (delta.sqrMagnitude <= stopDistance * stopDistance)
         {
             SetInput(Vector2.zero);
-
-            if (state == PrisonerState.EnteringJail)
-                FinishEnterJail();
-
             return;
         }
 
@@ -114,13 +99,13 @@ public class Prisoner : CharacterBase
 
     public void SetQueueSlot(PrisonerQueue queue, int index, Vector3 position)
     {
-        if (state == PrisonerState.EnteringJail || state == PrisonerState.InJail)
-            return;
-
         currentQueue = queue;
         queueIndex = index;
         targetPosition = position;
         hasTargetPosition = true;
+
+        if (state != PrisonerState.InJail)
+            state = PrisonerState.Queueing;
     }
 
     public void ClearQueueSlot(PrisonerQueue queue)
@@ -135,42 +120,17 @@ public class Prisoner : CharacterBase
 
     public bool TryReceiveHandcuff()
     {
-        if (state != PrisonerState.Queueing) return false;
-        if (IsReadyForJailQueue) return false;
+        if (IsReadyForJailEntry) return false;
+        if (state == PrisonerState.InJail) return false;
 
         currentHandcuff++;
         return true;
     }
 
-    public void EnterJail(Jail jail)
+    public void EnterJailQueue(JailQueue jailQueue)
     {
-        if (jail == null) return;
-        if (state == PrisonerState.EnteringJail || state == PrisonerState.InJail) return;
-
-        if (currentQueue != null)
-        {
-            PrisonerQueue oldQueue = currentQueue;
-            currentQueue = null;
-            queueIndex = -1;
-            oldQueue.Remove(this);
-        }
-
-        currentJail = jail;
-        state = PrisonerState.EnteringJail;
-        targetPosition = jail.EntryPoint.position;
-        hasTargetPosition = true;
-    }
-
-    private void FinishEnterJail()
-    {
-        hasTargetPosition = false;
-        SetInput(Vector2.zero);
+        currentJailQueue = jailQueue;
         state = PrisonerState.InJail;
-    }
-
-    public void SetCollisionEnable(bool enable)
-    {
-        controller.enabled = enable;
     }
 
     private void OnDisable()

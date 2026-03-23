@@ -15,6 +15,15 @@ public class PrisonerSpawner : MonoBehaviour
         Invoke("SpawnPrisoner", 3f);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            for(int i = 0; i < 3; i++)
+                SpawnPrisoner();
+        }
+    }
+
     private void SpawnPrisoner()
     {
         if (prisonerPrefab == null || prisonerQueue == null || spawnPoint == null)
