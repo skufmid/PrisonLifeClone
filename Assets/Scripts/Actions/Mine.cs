@@ -11,15 +11,7 @@ public class Mine : ActionBase<Rock>
     [SerializeField] private Transform rideSocket;
 
     private MineTool currentTool;
-    public MineTool CurrentTool
-    {
-        get => currentTool;
-        private set
-        {
-            currentTool = value;
-            UpdateAnimNames();
-        }
-    }
+    public MineTool CurrentTool => currentTool;
 
     private string startAnimName;
     private string stopAnimName;
@@ -36,8 +28,23 @@ public class Mine : ActionBase<Rock>
 
         anim = GetComponent<Animator>();
 
-        if (CurrentTool == null)
-            CurrentTool = defaultTool;
+        if (currentTool == null)
+            SetTool(defaultTool, false);
+    }
+
+    public bool SetTool(MineTool newTool, bool stopCurrentAction = true)
+    {
+        if (newTool == null)
+            return false;
+
+        if (stopCurrentAction && IsActing)
+            StopAction();
+
+        currentTool = newTool;
+        UpdateAnimNames();
+        RefreshToolObject();
+
+        return true;
     }
 
     private void UpdateAnimNames()
@@ -73,25 +80,31 @@ public class Mine : ActionBase<Rock>
     {
         while (true)
         {
-            if (target == null)
+            if (target == null || currentTool == null)
             {
                 StopAction();
                 yield break;
             }
 
-            yield return new WaitForSeconds(CurrentTool.interval);
+            yield return new WaitForSeconds(currentTool.interval);
             MineOnce();
         }
     }
 
     private void MineOnce()
     {
-        Vector3 center = transform.position + transform.forward * CurrentTool.range * 0.5f;
-        Collider[] hits = Physics.OverlapSphere(center, CurrentTool.range, ROCK_LAYER);
+        if (currentTool == null)
+        {
+            StopAction();
+            return;
+        }
+
+        Vector3 center = transform.position + transform.forward * currentTool.range * 0.5f;
+        Collider[] hits = Physics.OverlapSphere(center, currentTool.range, ROCK_LAYER);
 
         int minedCount = 0;
 
-        foreach (var hit in hits)
+        foreach (Collider hit in hits)
         {
             Rock rock = hit.GetComponent<Rock>();
             if (rock == null) continue;
@@ -99,35 +112,73 @@ public class Mine : ActionBase<Rock>
             rock.Mine(owner);
             minedCount++;
 
-            if (minedCount >= CurrentTool.maxMineAmount)
+            if (minedCount >= currentTool.maxMineAmount)
                 break;
         }
 
-        if (minedCount == 0) StopAction();
+        if (minedCount == 0)
+            StopAction();
+    }
+
+    private void RefreshToolObject()
+    {
+        if (activeToolObject == null)
+            return;
+
+        if (currentTool == null || currentTool.toolPrefab == null)
+        {
+            Destroy(activeToolObject);
+            activeToolObject = null;
+            activeToolPrefabSource = null;
+            return;
+        }
+
+        if (activeToolPrefabSource != currentTool)
+        {
+            bool wasActive = activeToolObject.activeSelf;
+
+            Destroy(activeToolObject);
+            activeToolObject = Instantiate(currentTool.toolPrefab);
+            activeToolPrefabSource = currentTool;
+
+            ApplyToolTransform();
+
+            activeToolObject.SetActive(wasActive);
+            return;
+        }
+
+        ApplyToolTransform();
     }
 
     private void EnableToolObject(bool enable)
     {
-        if (CurrentTool == null || CurrentTool.toolPrefab == null)
+        if (currentTool == null || currentTool.toolPrefab == null)
             return;
 
-        if (activeToolObject == null || activeToolPrefabSource != CurrentTool)
+        if (activeToolObject == null || activeToolPrefabSource != currentTool)
         {
             if (activeToolObject != null)
                 Destroy(activeToolObject);
 
-            activeToolObject = Instantiate(CurrentTool.toolPrefab);
-            activeToolPrefabSource = CurrentTool;
+            activeToolObject = Instantiate(currentTool.toolPrefab);
+            activeToolPrefabSource = currentTool;
         }
 
-        Transform mount = GetMountPoint(CurrentTool.equipType);
+        ApplyToolTransform();
+        activeToolObject.SetActive(enable);
+    }
+
+    private void ApplyToolTransform()
+    {
+        if (activeToolObject == null || currentTool == null)
+            return;
+
+        Transform mount = GetMountPoint(currentTool.equipType);
 
         activeToolObject.transform.SetParent(mount, false);
-        activeToolObject.transform.localPosition = Vector3.zero;
+        activeToolObject.transform.localPosition = currentTool.positionOffset;
         activeToolObject.transform.localRotation = Quaternion.identity;
         activeToolObject.transform.localScale = Vector3.one;
-
-        activeToolObject.SetActive(enable);
     }
 
     private Transform GetMountPoint(MineToolEquipType type)
@@ -137,7 +188,7 @@ public class Mine : ActionBase<Rock>
             MineToolEquipType.OneHand => oneHandSocket != null ? oneHandSocket : transform,
             MineToolEquipType.TwoHand => twoHandSocket != null ? twoHandSocket : transform,
             MineToolEquipType.Ride => rideSocket != null ? rideSocket : transform,
-            _ => transform,
+            _ => transform
         };
     }
 }
