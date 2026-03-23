@@ -9,6 +9,8 @@ public abstract class ActionTileBase : MonoBehaviour
     [SerializeField] private float actionInterval = 0.05f;
 
     private readonly HashSet<CharacterBase> charactersInTile = new();
+    private readonly List<CharacterBase> characterBuffer = new();
+
     private Coroutine coActionLoop;
     private WaitForSeconds cachedWait;
 
@@ -64,15 +66,24 @@ public abstract class ActionTileBase : MonoBehaviour
         }
 
         charactersInTile.Clear();
+        characterBuffer.Clear();
     }
 
     private IEnumerator CoActionLoop()
     {
         while (charactersInTile.Count > 0)
         {
-            foreach (CharacterBase character in charactersInTile)
+            characterBuffer.Clear();
+            characterBuffer.AddRange(charactersInTile);
+
+            for (int i = 0; i < characterBuffer.Count; i++)
             {
+                CharacterBase character = characterBuffer[i];
                 if (character == null) continue;
+
+                if (!charactersInTile.Contains(character))
+                    continue;
+
                 ProcessCharacter(character);
             }
 

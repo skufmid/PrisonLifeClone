@@ -17,6 +17,8 @@ public class PurchaseTile : ActionTileBase
     [SerializeField] private UnityEvent onProgressChanged;
     [SerializeField] private UnityEvent onPurchased;
 
+    private const int MoneyValue = GameManager.MoneyPerCarriable;
+
     private TileStack tileStack;
     private IPurchaseTarget purchaseTarget;
     private int depositedAmount;
@@ -76,7 +78,7 @@ public class PurchaseTile : ActionTileBase
             return;
         }
 
-        depositedAmount++;
+        depositedAmount += MoneyValue;
         onProgressChanged?.Invoke();
 
         if (depositedAmount >= Price)

@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     public event Action<int> OnMoneyChanged;
 
-    private const int MoneyPerCarriable = 5;
+    public const int MoneyPerCarriable = 5;
 
     private void Awake()
     {

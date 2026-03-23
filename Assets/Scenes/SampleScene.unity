@@ -1554,6 +1554,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 205254708}
     m_Modifications:
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: purchaseTargetSource
+      value: 
+      objectReference: {fileID: 1747988619}
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: onPurchased.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: onPurchased.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: onPurchased.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1747988619}
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: onPurchased.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: onPurchased.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnPurchased
+      objectReference: {fileID: 0}
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: onPurchased.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PurchaseTargetBase, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 358982516351938227, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: onPurchased.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2004319650457534564, guid: bb92bebf58e54c248b6343715e0e99e1,
         type: 3}
       propertyPath: m_Name
@@ -1616,7 +1656,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8380044082467568979, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1747988618}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb92bebf58e54c248b6343715e0e99e1, type: 3}
 --- !u!1 &660950204
@@ -1629,7 +1673,6 @@ GameObject:
   m_Component:
   - component: {fileID: 660950206}
   - component: {fileID: 660950205}
-  - component: {fileID: 660950207}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1664,27 +1707,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &660950207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 660950204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccc09b0ae272a6c4d8526048027f25b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mineTool: {fileID: 0}
-  targetMines: []
-  equipImmediately: 1
-  purchaseOnlyOnce: 1
-  activateOnPurchase: []
-  deactivateOnPurchase: []
-  onPurchased:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &697007295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,6 +1822,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 737944327}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &743066908 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1877041349254821385, guid: 78326c0fec969d344a06058ffadb6924,
+    type: 3}
+  m_PrefabInstance: {fileID: 3641193814660502179}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ec2b0b9527f604e890058d00b82d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &769937498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7231221494519288254, guid: 5059f15b2c1a65e46b385b37e48a67c7,
@@ -3586,6 +3620,59 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1713334732}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1747988617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1747988618}
+  - component: {fileID: 1747988619}
+  m_Layer: 0
+  m_Name: DrillPurchase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1747988618
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747988617}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 874825062}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1747988619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747988617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccc09b0ae272a6c4d8526048027f25b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  price: 20
+  isRepeatable: 0
+  onPurchased:
+    m_PersistentCalls:
+      m_Calls: []
+  mineTool: {fileID: 11400000, guid: c7b0b7584784d7e4cbbbfb35aa3a5593, type: 2}
+  targetMines:
+  - {fileID: 743066908}
+  equipImmediately: 1
 --- !u!1 &1786852728
 GameObject:
   m_ObjectHideFlags: 0

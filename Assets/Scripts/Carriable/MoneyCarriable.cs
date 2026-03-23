@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MoneyCarriable : CarriableBase
 {
-    private const int MoneyValue = 5;
+    private const int MoneyValue = GameManager.MoneyPerCarriable;
     private bool isCounted;
 
     public override CarrySlotType SlotType => CarrySlotType.Front;
