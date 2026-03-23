@@ -6,9 +6,7 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance => _instance;
-
-    public Transform PrisonPoint { get; private set; }
-    public int Money { get; set; }
+    public int Money { get; private set; }
 
     private void Awake()
     {
@@ -21,12 +19,15 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        Init();
     }
 
-    private void Init()
+    public void PlusMoney(int value)
     {
-        PrisonPoint = FindAnyObjectByType<Jail>().transform;
+        Money += value;
+    }
+
+    public void UseMoney(int value)
+    {
+        Money -= value;
     }
 }

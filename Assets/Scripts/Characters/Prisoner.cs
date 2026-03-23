@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Prisoner : CharacterBase
@@ -15,9 +16,6 @@ public class Prisoner : CharacterBase
     [Header("Handcuff")]
     [SerializeField] private int minRequiredHandcuff = 2;
     [SerializeField] private int maxRequiredHandcuff = 4;
-
-    [Header("Jail Enter")]
-    [SerializeField] private Collider[] collidersToDisableWhileEntering;
 
     private PrisonerQueue currentQueue;
     private int queueIndex = -1;
@@ -44,6 +42,14 @@ public class Prisoner : CharacterBase
     {
         requiredHandcuff = Random.Range(minRequiredHandcuff, maxRequiredHandcuff + 1);
         currentHandcuff = 0;
+
+        Debug.Log("detectCollisions: " + controller.detectCollisions);
+
+        Collider[] cols = GetComponentsInChildren<Collider>();
+        for (int i = 0; i < cols.Length; i++)
+        {
+            Debug.Log(cols[i].name + " / enabled: " + cols[i].enabled + " / type: " + cols[i].GetType().Name);
+        }
     }
 
     protected override void Update()
@@ -153,8 +159,6 @@ public class Prisoner : CharacterBase
         state = PrisonerState.EnteringJail;
         targetPosition = jail.EntryPoint.position;
         hasTargetPosition = true;
-
-        SetEnteringCollidersEnabled(false);
     }
 
     private void FinishEnterJail()
@@ -164,15 +168,9 @@ public class Prisoner : CharacterBase
         state = PrisonerState.InJail;
     }
 
-    private void SetEnteringCollidersEnabled(bool enabled)
+    public void SetCollisionEnable(bool enable)
     {
-        if (collidersToDisableWhileEntering == null) return;
-
-        for (int i = 0; i < collidersToDisableWhileEntering.Length; i++)
-        {
-            if (collidersToDisableWhileEntering[i] != null)
-                collidersToDisableWhileEntering[i].enabled = enabled;
-        }
+        controller.enabled = enable;
     }
 
     private void OnDisable()

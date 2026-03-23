@@ -383,6 +383,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   stopDistance: 0.08
+  minRequiredHandcuff: 1
+  maxRequiredHandcuff: 1
 --- !u!4 &4288279099888390723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a4d4825539ffa9c43989f4506022c907,
