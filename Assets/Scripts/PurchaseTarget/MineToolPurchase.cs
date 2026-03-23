@@ -13,7 +13,6 @@ public class MineToolPurchase : PurchaseTargetBase
 
     protected override void ApplyPurchase()
     {
-        Debug.Log("MineToolPurchase.ApplyPurchase()");
         if (mineTool == null) return;
 
         if (!equipImmediately) return;
