@@ -7,7 +7,6 @@ public class Rock : MonoBehaviour
 
     public void Mine(CharacterBase owner)
     {
-        Debug.Log("πŸ¿ß √§±ºµ ");
         SpawnResource(owner);
         gameObject.SetActive(false);
     }

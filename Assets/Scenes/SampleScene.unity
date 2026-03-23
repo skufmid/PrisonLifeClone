@@ -1629,6 +1629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 660950206}
   - component: {fileID: 660950205}
+  - component: {fileID: 660950207}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1663,6 +1664,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &660950207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660950204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccc09b0ae272a6c4d8526048027f25b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mineTool: {fileID: 0}
+  targetMines: []
+  equipImmediately: 1
+  purchaseOnlyOnce: 1
+  activateOnPurchase: []
+  deactivateOnPurchase: []
+  onPurchased:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &697007295
 GameObject:
   m_ObjectHideFlags: 0
@@ -4644,6 +4666,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3951518506267329955, guid: 78326c0fec969d344a06058ffadb6924,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 4288279099888390723, guid: 78326c0fec969d344a06058ffadb6924,
         type: 3}

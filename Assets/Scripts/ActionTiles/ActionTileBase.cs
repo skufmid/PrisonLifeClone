@@ -26,7 +26,6 @@ public abstract class ActionTileBase : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"OnTriggerEnter {gameObject.name}");
         CharacterBase character = other.GetComponent<CharacterBase>();
         if (character == null) return;
 
@@ -69,7 +68,6 @@ public abstract class ActionTileBase : MonoBehaviour
 
     private IEnumerator CoActionLoop()
     {
-        Debug.Log("CoActionLoop");
         while (charactersInTile.Count > 0)
         {
             foreach (CharacterBase character in charactersInTile)
