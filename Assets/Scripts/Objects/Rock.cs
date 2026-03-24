@@ -24,10 +24,28 @@ public class Rock : MonoBehaviour
         StartCoroutine(CoRespawn(respawnTime));
     }
 
+    public bool TryMineToTileStack(TileStack tileStack)
+    {
+        if (tileStack == null) return false;
+        if (rockCarriable == null) return false;
+        if (tileStack.IsFull) return false;
+
+        RockCarriable rockCarriableGO = Instantiate(rockCarriable, transform);
+        if (!tileStack.TryAdd(rockCarriableGO))
+        {
+            Destroy(rockCarriableGO.gameObject);
+        }
+
+        SetEnable(false);
+        StartCoroutine(CoRespawn(respawnTime));
+        return true;
+    }
+
+
     private void SpawnResourceToCarry(CharacterBase owner)
     {
         Carry carry = owner.GetComponent<Carry>();
-        if (carry == null) return; // 여기에 carry가 null이면 TileStack으로 이동하게
+        if (carry == null) return;
 
         RockCarriable rockCarriableGO = Instantiate(rockCarriable, transform);
         bool added = carry.TryAdd(rockCarriableGO);

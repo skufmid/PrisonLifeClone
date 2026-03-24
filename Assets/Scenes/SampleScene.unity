@@ -264,7 +264,7 @@ PrefabInstance:
     - target: {fileID: 7169776658933786046, guid: 680ef61aa21b96d449a7c57e564f1bc8,
         type: 3}
       propertyPath: tileSlot.maxLayers
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7169776658933786046, guid: 680ef61aa21b96d449a7c57e564f1bc8,
         type: 3}
@@ -592,13 +592,10 @@ MonoBehaviour:
   lanes:
   - startPoint: {fileID: 992636047}
     endPoint: {fileID: 1950175482}
-    outputTileStack: {fileID: 2039642190}
   - startPoint: {fileID: 2098768900}
     endPoint: {fileID: 572996667}
-    outputTileStack: {fileID: 2039642190}
   - startPoint: {fileID: 668363532}
     endPoint: {fileID: 848508296}
-    outputTileStack: {fileID: 2039642190}
 --- !u!1001 &89836563
 PrefabInstance:
   m_ObjectHideFlags: 0

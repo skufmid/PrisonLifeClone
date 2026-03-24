@@ -10,12 +10,15 @@ public class Mine : ActionBase<Rock>
     [SerializeField] private Transform twoHandSocket;
     [SerializeField] private Transform rideSocket;
 
+    [Header("Output")]
+    [SerializeField] private bool IsMiner;
+    private TileStack inputTileStack;
+
     private MineTool currentTool;
     public MineTool CurrentTool => currentTool;
 
     private string startAnimName;
     private string stopAnimName;
-
     private Animator anim;
     private GameObject activeToolObject;
     private MineTool activeToolPrefabSource;
@@ -25,17 +28,23 @@ public class Mine : ActionBase<Rock>
     protected override void Awake()
     {
         base.Awake();
-
         anim = GetComponent<Animator>();
 
         if (currentTool == null)
             SetTool(defaultTool, false);
+
+        if (IsMiner)
+        {
+            inputTileStack =
+                FindAnyObjectByType<HandcuffMachine>()
+                .GetComponentInChildren<DepositTile>()
+                .GetComponent<TileStack>();
+        }
     }
 
     public bool SetTool(MineTool newTool, bool stopCurrentAction = true)
     {
-        if (newTool == null)
-            return false;
+        if (newTool == null) return false;
 
         if (stopCurrentAction && IsActing)
             StopAction();
@@ -43,8 +52,12 @@ public class Mine : ActionBase<Rock>
         currentTool = newTool;
         UpdateAnimNames();
         RefreshToolObject();
-
         return true;
+    }
+
+    public void SetOutputTileStack(TileStack tileStack)
+    {
+        inputTileStack = tileStack;
     }
 
     private void UpdateAnimNames()
@@ -109,7 +122,9 @@ public class Mine : ActionBase<Rock>
             Rock rock = hit.GetComponent<Rock>();
             if (rock == null) continue;
 
-            rock.Mine(owner);
+            bool mined = TryMineRock(rock);
+            if (!mined) continue;
+
             minedCount++;
 
             if (minedCount >= currentTool.maxMineAmount)
@@ -120,10 +135,22 @@ public class Mine : ActionBase<Rock>
             StopAction();
     }
 
+    private bool TryMineRock(Rock rock)
+    {
+        if (rock == null) return false;
+
+        // 지정된 TileStack이 있으면 거기로 바로 보냄
+        if (inputTileStack != null)
+            return rock.TryMineToTileStack(inputTileStack);
+
+        // 지정된 TileStack이 없으면 기존 방식 그대로 Carry로 감
+        rock.Mine(owner);
+        return true;
+    }
+
     private void RefreshToolObject()
     {
-        if (activeToolObject == null)
-            return;
+        if (activeToolObject == null) return;
 
         if (currentTool == null || currentTool.toolPrefab == null)
         {
@@ -142,7 +169,6 @@ public class Mine : ActionBase<Rock>
             activeToolPrefabSource = currentTool;
 
             ApplyToolTransform();
-
             activeToolObject.SetActive(wasActive);
             return;
         }
@@ -152,8 +178,7 @@ public class Mine : ActionBase<Rock>
 
     private void EnableToolObject(bool enable)
     {
-        if (currentTool == null || currentTool.toolPrefab == null)
-            return;
+        if (currentTool == null || currentTool.toolPrefab == null) return;
 
         if (activeToolObject == null || activeToolPrefabSource != currentTool)
         {
@@ -170,11 +195,9 @@ public class Mine : ActionBase<Rock>
 
     private void ApplyToolTransform()
     {
-        if (activeToolObject == null || currentTool == null)
-            return;
+        if (activeToolObject == null || currentTool == null) return;
 
         Transform mount = GetMountPoint(currentTool.equipType);
-
         activeToolObject.transform.SetParent(mount, false);
         activeToolObject.transform.localPosition = currentTool.positionOffset;
         activeToolObject.transform.localRotation = Quaternion.identity;

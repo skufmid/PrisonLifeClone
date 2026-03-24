@@ -376,6 +376,7 @@ MonoBehaviour:
   oneHandSocket: {fileID: 7174316873538043179}
   twoHandSocket: {fileID: 0}
   rideSocket: {fileID: 0}
+  IsMiner: 1
 --- !u!114 &6746469962686860246
 MonoBehaviour:
   m_ObjectHideFlags: 0
