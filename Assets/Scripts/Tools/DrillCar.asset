@@ -16,7 +16,7 @@ MonoBehaviour:
   toolPrefab: {fileID: 8706829113712409476, guid: 38d7d96a9009c2f4bb90bd75db1b9d9b,
     type: 3}
   equipType: 2
-  positionOffset: {x: 0, y: 1, z: 3}
+  positionOffset: {x: 0, y: -1.5, z: 0}
   interval: 0.5
-  maxMineAmount: 7
-  range: 6
+  maxMineAmount: 12
+  range: 4
