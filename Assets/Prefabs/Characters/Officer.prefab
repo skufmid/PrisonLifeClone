@@ -272,7 +272,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a4d4825539ffa9c43989f4506022c907,
         type: 3}
       propertyPath: m_Name
-      value: Player
+      value: Officer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -293,19 +293,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a4d4825539ffa9c43989f4506022c907,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2908882052456108172}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a4d4825539ffa9c43989f4506022c907,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8083833984213834877}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a4d4825539ffa9c43989f4506022c907,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1877041349254821385}
+      addedObject: {fileID: 6551246480329140049}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a4d4825539ffa9c43989f4506022c907,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3964523051342332297}
+      addedObject: {fileID: 360719172548139372}
   m_SourcePrefab: {fileID: 100100000, guid: a4d4825539ffa9c43989f4506022c907, type: 3}
 --- !u!1 &3515296670346905849 stripped
 GameObject:
@@ -339,19 +335,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &2908882052456108172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3515296670346905849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a42d490bcee04747a27a0f8012a4204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
 --- !u!95 &8083833984213834877
 Animator:
   serializedVersion: 5
@@ -373,24 +356,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1877041349254821385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3515296670346905849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5ec2b0b9527f604e890058d00b82d6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultTool: {fileID: 11400000, guid: acacc972a26a15240998dd75077ed200, type: 2}
-  oneHandSocket: {fileID: 7174316873538043179}
-  twoHandSocket: {fileID: 0}
-  rideSocket: {fileID: 0}
-  IsMiner: 0
---- !u!114 &3964523051342332297
+--- !u!114 &6551246480329140049
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -424,15 +390,27 @@ MonoBehaviour:
     useCustomRotation: 0
     rotationEuler: {x: 0, y: 0, z: 0}
     items: []
+--- !u!114 &360719172548139372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3515296670346905849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47824cdd90811247bf3458b9495bae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
+  pointAStack: {fileID: 0}
+  pointBStack: {fileID: 0}
+  pointA: {fileID: 0}
+  pointB: {fileID: 0}
+  stopDistance: 0.1
 --- !u!4 &4288279099888390723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a4d4825539ffa9c43989f4506022c907,
-    type: 3}
-  m_PrefabInstance: {fileID: 4326198251627296168}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7174316873538043179 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6888806815857526915, guid: a4d4825539ffa9c43989f4506022c907,
     type: 3}
   m_PrefabInstance: {fileID: 4326198251627296168}
   m_PrefabAsset: {fileID: 0}
