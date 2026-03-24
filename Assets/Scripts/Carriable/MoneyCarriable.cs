@@ -5,7 +5,7 @@ public class MoneyCarriable : CarriableBase
     private const int MoneyValue = GameManager.MoneyPerCarriable;
     private bool isCounted;
 
-    public override CarrySlotType SlotType => CarrySlotType.Front;
+    public override CarrySlotType SlotType => CarrySlotType.Back;
 
     public override void OnPickedUp(
         StackHolderBase owner,
