@@ -51,24 +51,6 @@ public class Carry : StackHolderBase
         return false;
     }
 
-    public bool TryTakeLastFromAny(out CarriableBase item)
-    {
-        item = null;
-
-        if (TryTakeLast(CarrySlotType.Front, out item))
-            return true;
-
-        if (TryTakeLast(CarrySlotType.Back, out item))
-            return true;
-
-        return false;
-    }
-
-    public int GetCount(CarrySlotType slotType)
-    {
-        return GetCount(GetSlot(slotType));
-    }
-
     public bool HasItem(CarryItemType itemType)
     {
         for (int i = frontSlot.items.Count - 1; i >= 0; i--)
@@ -84,12 +66,6 @@ public class Carry : StackHolderBase
         }
 
         return false;
-    }
-
-    public void DropLastToWorld(CarrySlotType slotType, Vector3 worldPosition)
-    {
-        if (TryTakeLast(slotType, out CarriableBase item))
-            item.OnDropped(worldPosition);
     }
 
     private StackSlotData GetSlot(CarrySlotType slotType)
