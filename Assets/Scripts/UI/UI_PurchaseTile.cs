@@ -20,6 +20,12 @@ public class UI_PurchaseTile : MonoBehaviour
         purchaseTile = GetComponentInParent<PurchaseTile>();
     }
 
+    private void Start()
+    {
+        UpdateSlider();
+        UpdateText();
+    }
+
     public void UpdateSlider()
     {
         if (purchaseTile.Price <= 0) return;

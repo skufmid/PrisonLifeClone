@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Prisoner : CharacterBase
 {
@@ -14,6 +15,8 @@ public class Prisoner : CharacterBase
     [Header("Handcuff")]
     [SerializeField] private int minRequiredHandcuff = 2;
     [SerializeField] private int maxRequiredHandcuff = 4;
+
+    [SerializeField] private UnityEvent onRemainingHandcuffChanged;
 
     private PrisonerQueue currentQueue;
     private JailQueue currentJailQueue;
@@ -124,6 +127,8 @@ public class Prisoner : CharacterBase
         if (state == PrisonerState.InJail) return false;
 
         currentHandcuff++;
+
+        onRemainingHandcuffChanged?.Invoke();
         return true;
     }
 

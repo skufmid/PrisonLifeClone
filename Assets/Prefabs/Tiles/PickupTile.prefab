@@ -86,7 +86,7 @@ MonoBehaviour:
     anchor: {fileID: 8380044082467568979}
     rows: 1
     cols: 1
-    maxLayers: 10
+    maxLayers: 20
     itemSpacing: {x: 0.45, y: 0.3, z: 0.45}
     centerAlign: 1
     useCustomRotation: 0

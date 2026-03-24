@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Carry : StackHolderBase
@@ -16,6 +16,10 @@ public class Carry : StackHolderBase
     {
         slotType = CarrySlotType.Back
     };
+
+    [Header("Back Slot Extra")]
+    [SerializeField] private Transform moneyBackAnchor;
+
     public override bool CountsAsMoneyInventory => true;
 
     public bool TryAdd(CarriableBase item)
@@ -25,30 +29,54 @@ public class Carry : StackHolderBase
         StackSlotData slot = GetSlot(item.SlotType);
         if (slot == null) return false;
 
-        return TryAddToSlot(item, slot);
+        bool added = TryAddToSlot(item, slot);
+        if (!added) return false;
+
+        if (slot == backSlot) RefreshBackSlotPositions();
+        return true;
     }
 
     public bool TryTakeLast(CarrySlotType slotType, out CarriableBase item)
     {
-        return TryTakeLastFromSlot(GetSlot(slotType), out item);
+        StackSlotData slot = GetSlot(slotType);
+        bool taken = TryTakeLastFromSlot(slot, out item);
+
+        if (taken && slot == backSlot) RefreshBackSlotPositions();
+        return taken;
     }
 
     public bool TryTakeLastOfType(CarrySlotType slotType, CarryItemType itemType, out CarriableBase item)
     {
-        return TryTakeLastOfTypeFromSlot(GetSlot(slotType), itemType, out item);
+        StackSlotData slot = GetSlot(slotType);
+        bool taken = TryTakeLastOfTypeFromSlot(slot, itemType, out item);
+
+        if (taken && slot == backSlot) RefreshBackSlotPositions();
+        return taken;
     }
 
     public bool TryTakeLastOfTypeFromAny(CarryItemType itemType, out CarriableBase item)
     {
         item = null;
 
-        if (TryTakeLastOfType(CarrySlotType.Front, itemType, out item))
-            return true;
-
-        if (TryTakeLastOfType(CarrySlotType.Back, itemType, out item))
-            return true;
+        if (TryTakeLastOfType(CarrySlotType.Front, itemType, out item)) return true;
+        if (TryTakeLastOfType(CarrySlotType.Back, itemType, out item)) return true;
 
         return false;
+    }
+
+    public bool TryTakeLastFromAny(out CarriableBase item)
+    {
+        item = null;
+
+        if (TryTakeLast(CarrySlotType.Front, out item)) return true;
+        if (TryTakeLast(CarrySlotType.Back, out item)) return true;
+
+        return false;
+    }
+
+    public int GetCount(CarrySlotType slotType)
+    {
+        return GetCount(GetSlot(slotType));
     }
 
     public bool HasItem(CarryItemType itemType)
@@ -68,8 +96,60 @@ public class Carry : StackHolderBase
         return false;
     }
 
+    public void DropLastToWorld(CarrySlotType slotType, Vector3 worldPosition)
+    {
+        if (TryTakeLast(slotType, out CarriableBase item))
+            item.OnDropped(worldPosition);
+    }
+
     private StackSlotData GetSlot(CarrySlotType slotType)
     {
         return slotType == CarrySlotType.Front ? frontSlot : backSlot;
+    }
+
+    private void RefreshBackSlotPositions()
+    {
+        if (backSlot.anchor == null) return;
+
+        bool hasMoney = false;
+        bool hasOther = false;
+
+        for (int i = 0; i < backSlot.items.Count; i++)
+        {
+            CarriableBase item = backSlot.items[i];
+            if (item == null) continue;
+
+            if (item.ItemType == CarryItemType.Money) hasMoney = true;
+            else hasOther = true;
+        }
+
+        if (!hasMoney || !hasOther || moneyBackAnchor == null)
+        {
+            UpdateSlotPositions(backSlot);
+            return;
+        }
+
+        List<CarriableBase> normalItems = new();
+        List<CarriableBase> moneyItems = new();
+        Vector3 localEuler = GetSlotLocalRotation(backSlot);
+
+        for (int i = 0; i < backSlot.items.Count; i++)
+        {
+            CarriableBase item = backSlot.items[i];
+            if (item == null) continue;
+
+            if (item.ItemType == CarryItemType.Money)
+            {
+                moneyItems.Add(item);
+                Vector3 localPos = GetStackLocalPosition(backSlot, moneyItems, moneyItems.Count - 1);
+                item.UpdateCarryPosition(moneyBackAnchor, localPos, localEuler);
+            }
+            else
+            {
+                normalItems.Add(item);
+                Vector3 localPos = GetStackLocalPosition(backSlot, normalItems, normalItems.Count - 1);
+                item.UpdateCarryPosition(backSlot.anchor, localPos, localEuler);
+            }
+        }
     }
 }

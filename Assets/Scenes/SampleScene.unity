@@ -269,7 +269,7 @@ PrefabInstance:
     - target: {fileID: 7169776658933786046, guid: 680ef61aa21b96d449a7c57e564f1bc8,
         type: 3}
       propertyPath: tileSlot.maxLayers
-      value: 5
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7169776658933786046, guid: 680ef61aa21b96d449a7c57e564f1bc8,
         type: 3}
@@ -8606,6 +8606,11 @@ PrefabInstance:
         type: 3}
       propertyPath: allowedItemType
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
+        type: 3}
+      propertyPath: tileSlot.maxLayers
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
         type: 3}
