@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance => _instance;
 
-    private int money;
+    private int money = 10;
     public int Money
     {
         get => money;

@@ -302,6 +302,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6746469962686860246}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a4d4825539ffa9c43989f4506022c907,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7620677456064287267}
   m_SourcePrefab: {fileID: 100100000, guid: a4d4825539ffa9c43989f4506022c907, type: 3}
 --- !u!1 &3515296670346905849 stripped
 GameObject:
@@ -385,6 +389,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
+  stopDistance: 0.08
+--- !u!114 &7620677456064287267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3515296670346905849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 671d269b5349ea94cbed14db67e56865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontSlot:
+    slotType: 0
+    anchor: {fileID: 3951518506267329955}
+    rows: 1
+    cols: 1
+    maxLayers: 10
+    itemSpacing: {x: 0.45, y: 0.3, z: 0.45}
+    centerAlign: 1
+    useCustomRotation: 0
+    rotationEuler: {x: 0, y: 0, z: 0}
+    items: []
+  backSlot:
+    slotType: 1
+    anchor: {fileID: 8489974845704262050}
+    rows: 1
+    cols: 1
+    maxLayers: 10
+    itemSpacing: {x: 0.45, y: 0.3, z: 0.45}
+    centerAlign: 1
+    useCustomRotation: 0
+    rotationEuler: {x: 0, y: 0, z: 0}
+    items: []
 --- !u!4 &4288279099888390723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a4d4825539ffa9c43989f4506022c907,

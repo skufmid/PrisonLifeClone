@@ -4,84 +4,41 @@ using UnityEngine;
 public class Miner : CharacterBase
 {
     [Header("Move")]
-    private float stopDistance = 0.08f;
-    private float mineDistance = 0.3f;
-    private float stayDurationAtPoint = 1f;
+    [SerializeField] private float stopDistance = 0.08f;
 
     private Transform startPoint;
     private Transform endPoint;
-    private TileStack outputTileStack;
 
     private Vector3 targetPosition;
     private bool hasTargetPosition;
 
-    private bool isMovingToEnd = true;
-    private float stayTimer;
+    private bool goingToEnd = true;
 
     protected override void Update()
     {
-        UpdateRoute();
-        UpdateMovementInput();
+        UpdateMovement();
         base.Update();
     }
 
-    public void InitializeLane(Transform laneStartPoint, Transform laneEndPoint, TileStack targetTileStack)
+    public void InitializeLane(Transform laneStartPoint, Transform laneEndPoint)
     {
         startPoint = laneStartPoint;
         endPoint = laneEndPoint;
-        outputTileStack = targetTileStack;
 
-        isMovingToEnd = true;
-        stayTimer = 0f;
+        goingToEnd = true;
 
-        SetTarget(endPoint != null ? endPoint.position : transform.position);
-    }
-
-    private void UpdateRoute()
-    {
-        if (startPoint == null || endPoint == null)
+        if (endPoint == null)
         {
             hasTargetPosition = false;
-            stayTimer = 0f;
             SetInput(Vector2.zero);
             return;
         }
 
-        if (stayTimer > 0f)
-        {
-            stayTimer -= Time.deltaTime;
-
-            if (stayTimer <= 0f)
-            {
-                isMovingToEnd = !isMovingToEnd;
-                SetTarget(isMovingToEnd ? endPoint.position : startPoint.position);
-            }
-
-            return;
-        }
-
-        if (!hasTargetPosition) return;
-        if (!IsCloseEnough(targetPosition)) return;
-
-        hasTargetPosition = false;
-        SetInput(Vector2.zero);
-
-        if (isMovingToEnd)
-        {
-            TryMineNearestRockToOutput();
-        }
-
-        stayTimer = stayDurationAtPoint;
+        SetTarget(endPoint.position);
     }
 
-    private void UpdateMovementInput()
+    private void UpdateMovement()
     {
-        if (stayTimer > 0f)
-        {
-            SetInput(Vector2.zero);
-            return;
-        }
-
         if (!hasTargetPosition)
         {
             SetInput(Vector2.zero);
@@ -93,7 +50,7 @@ public class Miner : CharacterBase
 
         if (delta.sqrMagnitude <= stopDistance * stopDistance)
         {
-            SetInput(Vector2.zero);
+            OnArrived();
             return;
         }
 
@@ -101,57 +58,26 @@ public class Miner : CharacterBase
         SetInput(new Vector2(dir.x, dir.z));
     }
 
-    private void TryMineNearestRockToOutput()
+    private void OnArrived()
     {
-        if (outputTileStack == null) return;
-        if (outputTileStack.IsFull) return;
+        // 방향 전환
+        goingToEnd = !goingToEnd;
 
-        Rock targetRock = FindNearestMineableRock();
-        if (targetRock == null) return;
+        Transform nextTarget = goingToEnd ? endPoint : startPoint;
 
-        targetRock.TryMineToTileStack(outputTileStack);
-    }
-
-    private Rock FindNearestMineableRock()
-    {
-        Rock[] rocks = FindObjectsByType<Rock>(FindObjectsSortMode.None);
-
-        Rock nearestRock = null;
-        float nearestSqrDistance = float.MaxValue;
-        float maxSqrDistance = mineDistance * mineDistance;
-
-        for (int i = 0; i < rocks.Length; i++)
+        if (nextTarget == null)
         {
-            Rock rock = rocks[i];
-            if (rock == null) continue;
-            if (!rock.gameObject.activeInHierarchy) continue;
-
-            Vector3 delta = rock.transform.position - transform.position;
-            delta.y = 0f;
-
-            float sqrDistance = delta.sqrMagnitude;
-            if (sqrDistance > maxSqrDistance) continue;
-
-            if (sqrDistance < nearestSqrDistance)
-            {
-                nearestSqrDistance = sqrDistance;
-                nearestRock = rock;
-            }
+            hasTargetPosition = false;
+            SetInput(Vector2.zero);
+            return;
         }
 
-        return nearestRock;
+        SetTarget(nextTarget.position);
     }
 
     private void SetTarget(Vector3 position)
     {
         targetPosition = position;
         hasTargetPosition = true;
-    }
-
-    private bool IsCloseEnough(Vector3 destination)
-    {
-        Vector3 delta = destination - transform.position;
-        delta.y = 0f;
-        return delta.sqrMagnitude <= stopDistance * stopDistance;
     }
 }

@@ -8,7 +8,6 @@ public class MinerPurchase : PurchaseTargetBase
     {
         public Transform startPoint;
         public Transform endPoint;
-        public TileStack outputTileStack;
     }
 
     [Header("Miner")]
@@ -45,19 +44,13 @@ public class MinerPurchase : PurchaseTargetBase
                 continue;
             }
 
-            if (lane.outputTileStack == null)
-            {
-                Debug.LogWarning($"{name}: {i}번 lane의 outputTileStack이 비어 있습니다.");
-                continue;
-            }
-
             Miner miner = Instantiate(
                 minerPrefab,
                 lane.startPoint.position,
                 lane.startPoint.rotation
             );
 
-            miner.InitializeLane(lane.startPoint, lane.endPoint, lane.outputTileStack);
+            miner.InitializeLane(lane.startPoint, lane.endPoint);
         }
     }
 }
