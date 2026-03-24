@@ -29,7 +29,11 @@ public class Rock : MonoBehaviour
         if (carry == null) return;
 
         RockCarriable rockCarriableGO = Instantiate(rockCarriable, transform);
-        carry.TryAdd(rockCarriableGO);
+        bool added = carry.TryAdd(rockCarriableGO);
+        if (!added)
+        {
+            Destroy(rockCarriableGO.gameObject);
+        }
     }
 
     private void SetEnable(bool enable)
