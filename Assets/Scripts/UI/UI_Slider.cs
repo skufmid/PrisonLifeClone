@@ -1,0 +1,33 @@
+using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+
+public class UI_Slider : MonoBehaviour
+{
+    PurchaseTile purchaseTile;
+    [SerializeField] Image fill;
+    [SerializeField] Vector3 defaultPosition;
+    [SerializeField] Vector3 targetPosition;
+
+    private void Awake()
+    {
+        purchaseTile = GetComponentInParent<PurchaseTile>();
+    }
+
+    public void UpdateSlider()
+    {
+        if (purchaseTile.Price <= 0) return;
+
+        float t = 1f - ((float)purchaseTile.RemainingAmount / purchaseTile.Price);
+        t = Mathf.Clamp01(t);
+
+
+        fill.rectTransform.anchoredPosition =
+            Vector2.Lerp(defaultPosition, targetPosition, t);
+    }
+}
