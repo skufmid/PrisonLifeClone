@@ -5816,6 +5816,11 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 7193648542535214011, guid: bb92bebf58e54c248b6343715e0e99e1,
+        type: 3}
+      propertyPath: amountText
+      value: 
+      objectReference: {fileID: 1382127960}
     - target: {fileID: 7246972788319417880, guid: bb92bebf58e54c248b6343715e0e99e1,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -6815,6 +6820,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 856586658}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1382127960 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9155854368805132637, guid: bb92bebf58e54c248b6343715e0e99e1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1009751497}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1383810396 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7231221494519288254, guid: 5059f15b2c1a65e46b385b37e48a67c7,
@@ -8366,7 +8383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccc09b0ae272a6c4d8526048027f25b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  price: 20
+  price: 50
   isRepeatable: 0
   mineTool: {fileID: 11400000, guid: c7b0b7584784d7e4cbbbfb35aa3a5593, type: 2}
   targetMines:

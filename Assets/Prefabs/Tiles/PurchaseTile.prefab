@@ -228,8 +228,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7193648542535214011}
-        m_TargetAssemblyTypeName: UI_Slider, Assembly-CSharp
+        m_TargetAssemblyTypeName: UI_PurchaseTile, Assembly-CSharp
         m_MethodName: UpdateSlider
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7193648542535214011}
+        m_TargetAssemblyTypeName: UI_PurchaseTile, Assembly-CSharp
+        m_MethodName: UpdateText
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -507,9 +519,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 5038630467918548225}
   - {fileID: 1293206867273374340}
   - {fileID: 24541058955019409}
-  - {fileID: 5038630467918548225}
   m_Father: {fileID: 7576104805246928216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -595,6 +607,7 @@ MonoBehaviour:
   fill: {fileID: 8831544018992813291}
   defaultPosition: {x: 0, y: -1.5, z: 0}
   targetPosition: {x: 0, y: 0, z: 0}
+  amountText: {fileID: 9155854368805132637}
 --- !u!1 &5064943121417195928
 GameObject:
   m_ObjectHideFlags: 0
