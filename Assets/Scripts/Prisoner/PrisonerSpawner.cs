@@ -13,6 +13,7 @@ public class PrisonerSpawner : MonoBehaviour
         Invoke("SpawnPrisoner", 1f);
         Invoke("SpawnPrisoner", 2f);
         Invoke("SpawnPrisoner", 3f);
+        Invoke("SpawnPrisoner", 10f);
     }
 
     private void Update()
