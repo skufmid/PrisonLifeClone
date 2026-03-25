@@ -38,4 +38,9 @@ public class JailQueue : PrisonerQueue
         prisoner.EnterJailQueue(this);
         return true;
     }
+
+    public void ExtendCapacity(int amount)
+    {
+        maxCapacity += amount;
+    }
 }

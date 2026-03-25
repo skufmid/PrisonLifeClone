@@ -22,5 +22,6 @@ public class UI_JailCapacityText : MonoBehaviour
     public void UpdateText()
     {
         text.text = $"{jail.Count} / {jail.MaxCapacity}";
+        text.color = jail.HasSpace ? Color.white : Color.red;
     }
 }
