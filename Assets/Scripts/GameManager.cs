@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
         {
             if (money == value) return;
             money = Mathf.Max(0, value);
-            OnMoneyChanged?.Invoke(money);
+            onMoneyChanged?.Invoke();
             if (isFirstGetMoney && money > 0)
             {
                 isFirstGetMoney = false;
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     bool isFirstGetMoney = true;
     [SerializeField] private UnityEvent onFirstGetMoney;
-    public event Action<int> OnMoneyChanged;
+    [SerializeField] private UnityEvent onMoneyChanged;
 
     public const int MoneyPerCarriable = 5;
 
