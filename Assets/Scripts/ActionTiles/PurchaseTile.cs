@@ -97,6 +97,7 @@ public class PurchaseTile : ActionTileBase
 
         depositedAmount = 0;
         onProgressChanged?.Invoke();
+        SFXManager.instance.PlaySelf(SFXType.DingDong);
 
         ClearDepositedVisualsIfNeeded();
 

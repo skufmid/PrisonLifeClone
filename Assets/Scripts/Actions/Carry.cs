@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class Carry : StackHolderBase
 {
+    AudioSource source;
+
     [Header("Front Slot")]
     [SerializeField]
     private StackSlotData frontSlot = new StackSlotData
@@ -22,6 +26,11 @@ public class Carry : StackHolderBase
 
     public override bool CountsAsMoneyInventory => true;
 
+    protected void Awake()
+    {
+        source = GetComponent<AudioSource>();
+    }
+
     public bool TryAdd(CarriableBase item)
     {
         if (item == null) return false;
@@ -33,6 +42,7 @@ public class Carry : StackHolderBase
         if (!added) return false;
 
         if (slot == backSlot) RefreshBackSlotPositions();
+        SFXManager.instance.Play(source, SFXType.Dib);
         return true;
     }
 
@@ -42,6 +52,7 @@ public class Carry : StackHolderBase
         bool taken = TryTakeLastFromSlot(slot, out item);
 
         if (taken && slot == backSlot) RefreshBackSlotPositions();
+        if (taken) SFXManager.instance.Play(source, SFXType.Dib);
         return taken;
     }
 
@@ -51,6 +62,7 @@ public class Carry : StackHolderBase
         bool taken = TryTakeLastOfTypeFromSlot(slot, itemType, out item);
 
         if (taken && slot == backSlot) RefreshBackSlotPositions();
+        if (taken) SFXManager.instance.Play(source, SFXType.Dib);
         return taken;
     }
 

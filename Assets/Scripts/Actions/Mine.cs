@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Animator))]
 public class Mine : ActionBase<Rock>
 {
     [SerializeField] private MineTool defaultTool;
@@ -20,6 +22,7 @@ public class Mine : ActionBase<Rock>
     private string startAnimName;
     private string stopAnimName;
     private Animator anim;
+    private AudioSource source;
     private GameObject activeToolObject;
     private MineTool activeToolPrefabSource;
 
@@ -29,6 +32,7 @@ public class Mine : ActionBase<Rock>
     {
         base.Awake();
         anim = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
 
         if (currentTool == null)
             SetTool(defaultTool, false);
@@ -112,6 +116,8 @@ public class Mine : ActionBase<Rock>
             return;
         }
 
+        SFXManager.instance.Play(source, SFXType.Mine);
+
         Vector3 center = transform.position + transform.forward * currentTool.range * 0.5f;
         Collider[] hits = Physics.OverlapSphere(center, currentTool.range, ROCK_LAYER);
 
@@ -138,6 +144,7 @@ public class Mine : ActionBase<Rock>
     private bool TryMineRock(Rock rock)
     {
         if (rock == null) return false;
+
 
         // 지정된 TileStack이 있으면 거기로 바로 보냄
         if (inputTileStack != null)
