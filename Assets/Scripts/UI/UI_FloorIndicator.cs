@@ -58,6 +58,11 @@ public class UI_FloorIndicator : MonoBehaviour
         UpdateArrowTransform(toTarget);
     }
 
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
     private void UpdateArrowTransform(Vector3 toTarget)
     {
         Vector3 direction = toTarget.normalized;
