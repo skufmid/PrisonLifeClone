@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class Player : CharacterBase
 {
+    public bool IsMovable { get; set; } = true;
+
     [SerializeField] Joystick joystick;
     protected override void Update()
     {
-        base.Update();
+        if (!IsMovable) return;
 
         HandleInput();
+        base.Update();
     }
 
     private void HandleInput()

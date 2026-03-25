@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance => _instance;
 
+    public Player player;
     private int money = 10;
     public int Money
     {
@@ -44,11 +45,15 @@ public class GameManager : MonoBehaviour
         }
 
         Init();
+
+
     }
 
     private void Init()
     {
         Money = 0;
+        player = FindAnyObjectByType<Player>();
+
     }
 
     public void PlusMoney(int value)
