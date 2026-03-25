@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Rock : MonoBehaviour
 {
+    private PopBounceEffect popBounceEffect;
+
     public int resourceAmount = 1;
 
     [SerializeField] private float respawnTime = 3f;
@@ -13,6 +15,7 @@ public class Rock : MonoBehaviour
 
     private void Awake()
     {
+        popBounceEffect = GetComponent<PopBounceEffect>();
         collider = GetComponent<Collider>();
         renderer = GetComponent<Renderer>();
     }
@@ -60,6 +63,8 @@ public class Rock : MonoBehaviour
     {
         if (collider != null) collider.enabled = enable;
         if (renderer != null) renderer.enabled = enable;
+
+        if (enable) popBounceEffect?.Play();
     }
 
     private IEnumerator CoRespawn(float time)

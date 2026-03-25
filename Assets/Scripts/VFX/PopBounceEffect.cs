@@ -6,6 +6,7 @@ public class PopBounceEffect : MonoBehaviour
     [SerializeField] private float startScale = 0.2f;
     [SerializeField] private float growDuration = 0.2f;
     [SerializeField] private float bounceDuration = 0.15f;
+    [SerializeField] private float bounceScale = 1.5f;
 
     private Vector3 originalScale;
     private Sequence sequence;
@@ -20,6 +21,11 @@ public class PopBounceEffect : MonoBehaviour
         Play();
     }
 
+    public void PlayOnce()
+    {
+        Play();
+    }
+
     public void Play()
     {
         sequence?.Kill();
@@ -27,7 +33,7 @@ public class PopBounceEffect : MonoBehaviour
         transform.localScale = originalScale * startScale;
 
         sequence = DOTween.Sequence();
-        sequence.Append(transform.DOScale(originalScale * 1.5f, growDuration).SetEase(Ease.OutQuad));
+        sequence.Append(transform.DOScale(originalScale * bounceScale, growDuration).SetEase(Ease.OutQuad));
         sequence.Append(transform.DOScale(originalScale, bounceDuration).SetEase(Ease.OutBounce));
     }
 

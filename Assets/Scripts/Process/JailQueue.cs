@@ -10,6 +10,7 @@ public class JailQueue : PrisonerQueue
 
     bool isFirstMaxCapacityReached = true;
     [SerializeField] private UnityEvent onMaxCapacityReached;
+    [SerializeField] private UnityEvent onPrisonerEnqueued;
 
     public override bool CanEnqueue(Prisoner prisoner)
     {
@@ -22,6 +23,7 @@ public class JailQueue : PrisonerQueue
             }
             return false;
         }
+
         return base.CanEnqueue(prisoner);
     }
 
@@ -32,6 +34,7 @@ public class JailQueue : PrisonerQueue
         bool success = base.Enqueue(prisoner);
         if (!success) return false;
 
+        onPrisonerEnqueued?.Invoke();
         prisoner.EnterJailQueue(this);
         return true;
     }
