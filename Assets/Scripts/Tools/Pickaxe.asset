@@ -19,4 +19,4 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0.4, z: 0}
   interval: 1
   maxMineAmount: 1
-  range: 0.3
+  range: 0.4
