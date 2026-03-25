@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Animator))]
@@ -27,6 +28,9 @@ public class Mine : ActionBase<Rock>
     private MineTool activeToolPrefabSource;
 
     private const int ROCK_LAYER = 1 << 6;
+
+    bool isFirstMine = true;
+    [SerializeField] private UnityEvent onFirstMine;
 
     protected override void Awake()
     {
@@ -135,6 +139,12 @@ public class Mine : ActionBase<Rock>
 
             if (minedCount >= currentTool.maxMineAmount)
                 break;
+        }
+
+        if (isFirstMine)
+        {
+            onFirstMine?.Invoke();
+            isFirstMine = false;
         }
 
         if (minedCount == 0)

@@ -2,95 +2,62 @@ using UnityEngine;
 
 public class UI_FloorIndicator : MonoBehaviour
 {
+    [SerializeField] private float distanceFromPlayer = 2.5f;
+    [SerializeField] private float yOffset = 0.05f;
     [SerializeField] private Transform player;
-    [SerializeField] private Transform target;
-    [SerializeField] private Camera targetCamera;
-    [SerializeField] private GameObject arrowVisual;
-    [SerializeField] private float distanceFromPlayer = 2f;
-    [SerializeField] private float groundY = 0.05f;
-    [SerializeField] private float hideDistance = 1f;
+    private Renderer renderer;
 
-    private void Reset()
-    {
-        targetCamera = Camera.main;
-        arrowVisual = gameObject;
-    }
+    private Transform target;
+    private Camera cam;
 
     private void Awake()
     {
-        if (targetCamera == null)
-        {
-            targetCamera = Camera.main;
-        }
+        cam = Camera.main;
+        renderer = GetComponentInChildren<Renderer>();
 
-        if (arrowVisual == null)
-        {
-            arrowVisual = gameObject;
-        }
+        Hide();
     }
 
     private void LateUpdate()
     {
-        if (player == null || target == null || targetCamera == null)
-        {
-            SetArrowActive(false);
-            return;
-        }
+        if (target == null || player == null || cam == null) return;
 
-        Vector3 toTarget = target.position - player.position;
-        toTarget.y = 0f;
-
-        if (toTarget.sqrMagnitude <= hideDistance * hideDistance)
-        {
-            SetArrowActive(false);
-            return;
-        }
-
-        bool isVisible = IsTargetVisible(target.position);
-
-        if (isVisible)
-        {
-            SetArrowActive(false);
-            return;
-        }
-
-        SetArrowActive(true);
-        UpdateArrowTransform(toTarget);
+        UpdatePositionAndRotation();
     }
 
-    public void SetTarget(Transform newTarget)
+    public void Initialize(Transform playerTransform)
     {
-        target = newTarget;
+        player = playerTransform;
     }
 
-    private void UpdateArrowTransform(Vector3 toTarget)
+    public void Show(Transform targetTransform)
     {
-        Vector3 direction = toTarget.normalized;
-        Vector3 position = player.position + direction * distanceFromPlayer;
-        position.y = groundY;
-
-        transform.position = position;
-
-        if (direction.sqrMagnitude > 0.0001f)
-        {
-            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
-        }
+        target = targetTransform;
+        renderer.enabled = true;
+    
     }
 
-    private bool IsTargetVisible(Vector3 worldPosition)
+    public void Hide()
     {
-        Vector3 viewportPoint = targetCamera.WorldToViewportPoint(worldPosition);
-
-        if (viewportPoint.z <= 0f) return false;
-        if (viewportPoint.x < 0f || viewportPoint.x > 1f) return false;
-        if (viewportPoint.y < 0f || viewportPoint.y > 1f) return false;
-
-        return true;
+        target = null;
+        renderer.enabled = false;
     }
 
-    private void SetArrowActive(bool active)
+    private void UpdatePositionAndRotation()
     {
-        if (arrowVisual.activeSelf == active) return;
-        arrowVisual.SetActive(active);
+        Vector3 dir = target.position - player.position;
+        dir.y = 0f;
+
+        if (dir.sqrMagnitude < 0.001f) return;
+
+        dir.Normalize();
+
+        Vector3 pos = player.position + dir * distanceFromPlayer;
+        pos.y += yOffset;
+
+        transform.position = pos;
+
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(90f, angle, 0f);
     }
 }

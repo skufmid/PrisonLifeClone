@@ -87,12 +87,18 @@ MonoBehaviour:
     rows: 1
     cols: 1
     maxLayers: 20
-    itemSpacing: {x: 0.45, y: 0.3, z: 0.45}
+    itemSpacing: {x: 0.45, y: 0.35, z: 0.45}
     centerAlign: 1
     useCustomRotation: 0
     rotationEuler: {x: 0, y: 0, z: 0}
     items: []
   allowedItemType: 0
+  onFirstAdd:
+    m_PersistentCalls:
+      m_Calls: []
+  onFirstTake:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5064943121417195928
 GameObject:
   m_ObjectHideFlags: 0

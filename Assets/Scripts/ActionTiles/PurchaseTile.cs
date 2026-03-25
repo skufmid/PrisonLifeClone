@@ -4,7 +4,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(TileStack))]
 public class PurchaseTile : ActionTileBase
 {
-    [Header("Purchase Target")]
+    [Header("Purchase target")]
     [SerializeField] private MonoBehaviour purchaseTargetSource;
 
     [Header("Deposit")]

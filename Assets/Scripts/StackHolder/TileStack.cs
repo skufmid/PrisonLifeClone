@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TileStack : StackHolderBase
 {
@@ -11,6 +12,12 @@ public class TileStack : StackHolderBase
 
     [Header("Accept Settings")]
     [SerializeField] private CarryItemType allowedItemType = CarryItemType.None;
+
+    bool isFirstAdd = true;
+    bool isFirstTake = true;
+
+    [SerializeField] private UnityEvent onFirstAdd;
+    [SerializeField] private UnityEvent onFirstTake;
 
     public CarryItemType AllowedItemType => allowedItemType;
     public int Count => GetCount(tileSlot);
@@ -30,6 +37,12 @@ public class TileStack : StackHolderBase
     public bool TryAdd(CarriableBase item)
     {
         if (!CanAccept(item)) return false;
+
+        if (isFirstAdd)
+        {
+            isFirstAdd = false;
+            onFirstAdd?.Invoke();
+        }
         return TryAddToSlot(item, tileSlot);
     }
 
@@ -46,6 +59,11 @@ public class TileStack : StackHolderBase
 
     public bool TryTakeLast(out CarriableBase item)
     {
+        if (isFirstTake)
+        {
+            isFirstTake = false;
+            onFirstTake?.Invoke();
+        }
         return TryTakeLastFromSlot(tileSlot, out item);
     }
 

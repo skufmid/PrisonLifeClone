@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource))]
 
@@ -26,6 +27,9 @@ public class Carry : StackHolderBase
 
     public override bool CountsAsMoneyInventory => true;
 
+    bool isFirstCarry3 = true;
+    [SerializeField] private UnityEvent onFirstCarry3;
+
     protected void Awake()
     {
         source = GetComponent<AudioSource>();
@@ -43,6 +47,12 @@ public class Carry : StackHolderBase
 
         if (slot == backSlot) RefreshBackSlotPositions();
         SFXManager.instance.Play(source, SFXType.Dib);
+
+        if (isFirstCarry3 && GetCount(CarrySlotType.Front) + GetCount(CarrySlotType.Back) >= 3)
+        {
+            isFirstCarry3 = false;
+            onFirstCarry3?.Invoke();
+        }
         return true;
     }
 
