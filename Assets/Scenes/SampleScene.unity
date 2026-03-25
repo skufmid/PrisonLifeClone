@@ -406,7 +406,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputStack: {fileID: 2039642190}
   outputStack: {fileID: 1802878430}
-  processTime: 1
+  processTime: 0.75
   autoStart: 1
   inputType: 1
   outputPrefab: {fileID: 400523529070200917, guid: cf39ba9fd661d684eb676abf99234b72,
@@ -480,7 +480,7 @@ PrefabInstance:
     - target: {fileID: 7169776658933786046, guid: 680ef61aa21b96d449a7c57e564f1bc8,
         type: 3}
       propertyPath: tileSlot.maxLayers
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7169776658933786046, guid: 680ef61aa21b96d449a7c57e564f1bc8,
         type: 3}
@@ -7334,27 +7334,27 @@ PrefabInstance:
     - target: {fileID: 2276973413476128438, guid: b824c5f8f3a3b3447948e156a801768d,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6830127
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 2276973413476128438, guid: b824c5f8f3a3b3447948e156a801768d,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.18301274
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2276973413476128438, guid: b824c5f8f3a3b3447948e156a801768d,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.18301274
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2276973413476128438, guid: b824c5f8f3a3b3447948e156a801768d,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.6830127
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 2276973413476128438, guid: b824c5f8f3a3b3447948e156a801768d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2535104294338643209, guid: b824c5f8f3a3b3447948e156a801768d,
         type: 3}
@@ -10998,7 +10998,7 @@ PrefabInstance:
     - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
         type: 3}
       propertyPath: tileSlot.maxLayers
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7169776658933786046, guid: 67c7e38bc1d323f4bbc698668dc22f0c,
         type: 3}
@@ -11882,6 +11882,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2060470037}
         m_TargetAssemblyTypeName: UI_JailCapacityText, Assembly-CSharp
         m_MethodName: UpdateText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 217372614}
+        m_TargetAssemblyTypeName: PrisonerSpawner, Assembly-CSharp
+        m_MethodName: SpawnPrisoner
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13341,6 +13353,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3964523051342332297, guid: 78326c0fec969d344a06058ffadb6924,
+        type: 3}
+      propertyPath: backSlot.maxLayers
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3964523051342332297, guid: 78326c0fec969d344a06058ffadb6924,
+        type: 3}
+      propertyPath: frontSlot.maxLayers
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3964523051342332297, guid: 78326c0fec969d344a06058ffadb6924,
         type: 3}

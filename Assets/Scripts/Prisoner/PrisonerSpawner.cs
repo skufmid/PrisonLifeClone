@@ -24,7 +24,7 @@ public class PrisonerSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnPrisoner()
+    public void SpawnPrisoner()
     {
         if (prisonerPrefab == null || prisonerQueue == null || spawnPoint == null)
             return;
