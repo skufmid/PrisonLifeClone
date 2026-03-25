@@ -1,15 +1,27 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class JailQueue : PrisonerQueue
 {
-    [SerializeField] private int maxCapacity = 4;
+    [SerializeField] private int maxCapacity = 20;
 
     public int MaxCapacity => maxCapacity;
     public bool HasSpace => Count < maxCapacity;
 
+    bool isFirstMaxCapacityReached = true;
+    [SerializeField] private UnityEvent onMaxCapacityReached;
+
     public override bool CanEnqueue(Prisoner prisoner)
     {
-        if (!HasSpace) return false;
+        if (!HasSpace)
+        {
+            if (isFirstMaxCapacityReached)
+            {
+                isFirstMaxCapacityReached = false;
+                onMaxCapacityReached?.Invoke();
+            }
+            return false;
+        }
         return base.CanEnqueue(prisoner);
     }
 

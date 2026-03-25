@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,9 +16,16 @@ public class GameManager : MonoBehaviour
             if (money == value) return;
             money = Mathf.Max(0, value);
             OnMoneyChanged?.Invoke(money);
+            if (isFirstGetMoney && money > 0)
+            {
+                isFirstGetMoney = false;
+                onFirstGetMoney?.Invoke();
+            }
         }
     }
 
+    bool isFirstGetMoney = true;
+    [SerializeField] private UnityEvent onFirstGetMoney;
     public event Action<int> OnMoneyChanged;
 
     public const int MoneyPerCarriable = 5;

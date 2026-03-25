@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceAmount: 1
-  respawnTime: 3
+  respawnTime: 5
   rockCarriable: {fileID: 1193750464802966232, guid: 34f6f3f32e0048e48a8277a61aa028a5,
     type: 3}
 --- !u!65 &4727091712015571101

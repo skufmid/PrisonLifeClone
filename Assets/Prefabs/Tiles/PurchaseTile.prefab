@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: -1760578635264394877}
   - component: {fileID: 358982516351938227}
   - component: {fileID: 7169776658933786046}
+  - component: {fileID: 4989028044574923358}
   m_Layer: 0
   m_Name: PurchaseTile
   m_TagString: Untagged
@@ -278,6 +279,21 @@ MonoBehaviour:
     rotationEuler: {x: 0, y: 0, z: 0}
     items: []
   allowedItemType: 0
+--- !u!114 &4989028044574923358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004319650457534564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97a96b9b28a56e24e9aefbc5cb5e73f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startScale: 0.2
+  growDuration: 0.2
+  bounceDuration: 0.5
 --- !u!1 &2111935943201668473
 GameObject:
   m_ObjectHideFlags: 0
